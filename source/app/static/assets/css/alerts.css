@@ -2,16 +2,20 @@
     position: relative;
     border-radius: 35px;
     margin-bottom: 10px;
+    background-color: #1a1a1a; /* Near black background */
+    color: #FF8C00; /* Dark amber text */
+    border: 1px solid #B86B00; /* Amber border */
 }
 
 .alert-card .alert-actions {
-  display: none;
+    display: none;
 }
 
 .alert-card:hover .alert-actions {
-  display: block;
+    display: block;
 }
 
+/* #### ALERT ACTIONS #### */
 .alert-actions {
     position: relative;
     right: 0;
@@ -20,87 +24,96 @@
 }
 
 @media (max-width: 1224px) {
-  .alert-actions {
-    top: 0;
-  }
+    .alert-actions {
+        top: 0;
+    }
 }
 
+/* #### BUTTONS #### */
 .btn-alert-primary {
-  background: #445169 !important;
-  border-color: #445169 !important;
-    color: white;
+    background: #B86B00 !important; /* Dark amber */
+    border-color: #B86B00 !important;
+    color: #000000; /* Black text */
 }
 
 .btn-alert-success {
-  background: #32B67A !important;
-  border-color: #32B67A !important;
-    color: white;
+    background: #FF8C00 !important; /* Brighter amber */
+    border-color: #FF8C00 !important;
+    color: #000000; /* Black text */
 }
 
 .btn-alert-danger {
-  background: #E9727D !important;
-  border-color: #E9727D !important;
+    background: #8B2500 !important; /* Deep burnt amber */
+    border-color: #8B2500 !important;
     color: white;
 }
 
+/* #### BACKGROUND COLORS #### */
 .bg-alert-success {
-  background-color: #32B67A !important;
+    background-color: #FF8C00 !important; /* Dark amber */
 }
 
 .bg-alert-danger {
-  background-color: #E9727D !important;
+    background-color: #8B2500 !important; /* Deep burnt amber */
 }
 
 .bg-muted {
-  background-color: #6b6d73 !important;
+    background-color: #1a1a1a !important; /* Near black */
 }
 
 .bg-low {
-  background-color: #ffdc71 !important;
+    background-color: #B86B00 !important; /* Dark amber */
 }
 
 .bg-critical {
-  background-color: #7d0fdd !important;
+    background-color: #FF4500 !important; /* Fiery orange */
 }
 
+/* #### ALERT TITLES HOVER #### */
 .alert-m-title-critical:hover {
-  color: #7d0fdd;
-}
-.alert-m-title-danger:hover {
-  color: #F25961;
-}
-.alert-m-title-warning:hover {
-  color: #FFAD46;
-}
-.alert-m-title-info:hover {
-  color: #48ABF7;
-}
-.alert-m-title-low:hover {
-  color: #ffdc71;
-}
-.alert-m-title-muted:hover {
-  color: #6b6d73;
+    color: #FF4500; /* Fiery orange */
 }
 
+.alert-m-title-danger:hover {
+    color: #8B2500; /* Deep burnt amber */
+}
+
+.alert-m-title-warning:hover {
+    color: #FF8C00; /* Dark amber */
+}
+
+.alert-m-title-info:hover {
+    color: #FFC107; /* Warm gold */
+}
+
+.alert-m-title-low:hover {
+    color: #B86B00; /* Dark amber */
+}
+
+.alert-m-title-muted:hover {
+    color: #6b6d73;
+}
+
+/* #### ENRICHMENT STYLES #### */
 .enrichment-dl {
-  font-size: 0.9em;
-  max-height: 200px;
-  overflow-y: auto;
-  margin-bottom: 0;
+    font-size: 0.9em;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 0;
 }
 
 .enrichment-dl dt {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .enrichment-dl dd {
-  margin-left: 20px;
-  margin-bottom: 8px;
+    margin-left: 20px;
+    margin-bottom: 8px;
 }
 
-
-.alert-m-title{
-  cursor: pointer;
+/* #### MISCELLANEOUS #### */
+.alert-m-title {
+    cursor: pointer;
 }
 
 .avatar-wrapper {
@@ -117,51 +130,58 @@
 }
 
 .pre-scrollable {
-  white-space: pre-wrap;
-  word-wrap: break-word;
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
 
+/* #### GRAPH BACKGROUND #### */
 .similar-alert-graph {
-    background-color: #f2f2f2;
+    background-color: #1a1a1a; /* Near black */
     border-radius: 25px;
 }
 
+/* #### HIDDEN ELEMENTS #### */
 .hidden {
-  display: none;
+    display: none;
 }
 
+/* #### CONTEXT MENU #### */
 #context-menu {
-  position: absolute;
-  z-index: 100;
-  background-color: white;
-  border: 1px solid black;
-  padding: 10px;
+    position: absolute;
+    z-index: 100;
+    background-color: #1a1a1a; /* Near black */
+    border: 1px solid #B86B00; /* Amber border */
+    padding: 10px;
+    color: #FF8C00; /* Dark amber text */
 }
 
 #context-menu ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
 #context-menu li {
-  padding: 5px;
-  cursor: pointer;
+    padding: 5px;
+    cursor: pointer;
 }
 
 #context-menu li:hover {
-  background-color: #f0f0f0;
+    background-color: #B86B00; /* Dark amber hover */
 }
 
+/* #### ALERT CARD STATUS #### */
 .alert-card-done {
-  background-color: #eaeaea;
+    background-color: #1a1a1a; /* Near black */
+    color: #FF8C00; /* Dark amber text */
 }
 
 .alert-card-new .alert-bade-status {
-    background-color: #9D2F35;
-  color: white;
+    background-color: #B86B00; /* Dark amber */
+    color: white;
 }
 
+/* #### TRASH ICON #### */
 .trash-wrapper {
     position: absolute;
     right: 18px;
@@ -173,12 +193,12 @@
     display: none;
 }
 
-
+/* #### RESPONSIVE DESIGN #### */
 @media (max-width: 576px) {
-  .alert-actions {
-    flex-wrap: wrap;
-  }
-  .alert-actions > * {
-    margin-bottom: 0.5rem;
-  }
+    .alert-actions {
+        flex-wrap: wrap;
+    }
+    .alert-actions > * {
+        margin-bottom: 0.5rem;
+    }
 }
