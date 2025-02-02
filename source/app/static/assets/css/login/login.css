@@ -3,6 +3,7 @@
     height: 100%;
     display: flex;
     align-items: stretch;
+    background-color: #000000; /* Pure black background */
 }
 
 .login__wrapper {
@@ -11,99 +12,100 @@
     margin: 0;
 }
 
+/* #### LEFT SIDE #### */
 .login__left_part {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(#013479, #011d40) !important;
+    background: radial-gradient(#B86B00, #4F2500) !important; /* Dark amber gradient */
 }
 
+/* #### RIGHT SIDE #### */
 .login__right_part {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: stretch;
     padding: 15px;
+    background-color: #1a1a1a; /* Near black */
+    color: #FF8C00; /* Dark amber text */
 }
 
+/* #### FORM #### */
 .login__form {
-    margin: 0 8% 0 8%;
+    margin: 0 8%;
 }
-
-/* ############### */
-/* #### TITLE #### */
-/* ############### */
 
 .login__form_title {
     align-self: center;
     font-weight: bold;
     margin-bottom: 20px;
+    font-size: 24px;
+    color: #FF8C00; /* Dark amber */
 }
 
-/* ############## */
 /* #### LOGO #### */
-/* ############## */
 .login__logo {
-    max-width: 35%
+    max-width: 35%;
 }
 
-.login__logo img{
+.login__logo img {
     height: auto;
     max-width: 100%;
 }
 
-/* ############### */
-/* #### FIELD #### */
-/* ############### */
+/* #### FORM FIELDS #### */
 .login__form_field_container {
     margin-bottom: 20px;
 }
 
-.login__form_field_container label{
-    color: #737373;
+.login__form_field_container label {
+    color: #FF8C00; /* Dark amber labels */
+    font-weight: bold;
 }
 
 .login__form_input {
     display: flex;
     align-items: center;
+    background-color: #1a1a1a; /* Near black background */
+    border: 1px solid #B86B00; /* Amber border */
+    padding: 8px;
+    border-radius: 5px;
+    color: #FF8C00; /* Dark amber text */
 }
 
-.login__form_input * {
-    margin-right: 5px;
-}
-
-.login__form_input *:last-child{
-    margin-right: 0;
+.login__form_input input {
+    background: none;
+    border: none;
+    color: #FF8C00; /* Dark amber text */
 }
 
 .login__show_password {
     cursor: pointer;
-    right: 20px
+    color: #FF8C00; /* Dark amber */
 }
 
-.login__show_password--disabled {
-    color: lightgrey;
-}
-
-/* ################ */
-/* #### ACTION #### */
-/* ################ */
-
-.login__action_container {
-    display: flex;
-    justify-content: space-between;
-}
-
+/* #### BUTTONS #### */
 .login__submit_button {
     width: 40%;
     font-weight: bold;
+    background-color: #B86B00; /* Dark amber */
+    color: #000000; /* Black contrast */
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
 }
 
-/* ################# */
-/* #### CONTACT #### */
-/* ################# */
+.login__submit_button:hover {
+    background-color: #FF8C00; /* Brighter amber */
+    color: #000000;
+}
 
+/* #### CONTACT #### */
 .login__contact_container {
     align-self: center;
+    color: #FF8C00; /* Dark amber text */
 }
