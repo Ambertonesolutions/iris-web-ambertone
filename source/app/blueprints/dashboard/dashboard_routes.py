@@ -124,6 +124,7 @@ def get_agent_analytics():
         api_client = AmbertoneAPI()
         
         try:
+            api_client.authenticate()
             analytics_data = api_client.get_agents_analytics()
             return response_success("Agent analytics retrieved successfully", data=analytics_data)
             
