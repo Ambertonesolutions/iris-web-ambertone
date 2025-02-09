@@ -1,0 +1,95 @@
+services:
+  rabbitmq:
+    extends:
+      file: docker-compose.base.yml
+      service: rabbitmq
+
+  db:
+    extends:
+      file: docker-compose.base.yml
+      service: db
+    image: ${DB_IMAGE_NAME:-ghcr.io/dfir-iris/iriswebapp_db}:${DB_IMAGE_TAG:-v2.4.19}
+    
+  app:
+    container_name: iriswebapp_app
+    build:
+      context: .
+      dockerfile: docker/webApp/Dockerfile.dev
+    volumes:
+      - ./source:/app:rw
+      - ./certificates/rootCA/irisRootCACert.pem:/etc/irisRootCACert.pem:ro
+      - ./certificates/:/home/iris/certificates/:ro
+      - ./certificates/ldap/:/iriswebapp/certificates/ldap/:ro
+      - iris-downloads:/home/iris/downloads
+      - user_templates:/home/iris/user_templates
+      - server_data:/home/iris/server_data
+    ports:
+      - "127.0.0.1:8000:8000"
+    env_file:
+      - .env
+    environment:
+      - FLASK_DEBUG=1
+      - FLASK_ENV=development
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_SERVER=${POSTGRES_SERVER}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - IRIS_SECRET_KEY=${IRIS_SECRET_KEY}
+      - IRIS_SECURITY_PASSWORD_SALT=${IRIS_SECURITY_PASSWORD_SALT}
+    depends_on:
+      - rabbitmq
+      - db
+    networks:
+      - iris_backend
+      - iris_frontend
+
+  worker:
+    container_name: iriswebapp_worker
+    build:
+      context: .
+      dockerfile: docker/webApp/Dockerfile.dev
+    volumes:
+      - ./source:/app:rw
+      - ./certificates/rootCA/irisRootCACert.pem:/etc/irisRootCACert.pem:ro
+      - ./certificates/:/home/iris/certificates/:ro
+      - ./certificates/ldap/:/iriswebapp/certificates/ldap/:ro
+      - iris-downloads:/home/iris/downloads
+      - user_templates:/home/iris/user_templates
+      - server_data:/home/iris/server_data
+    env_file:
+      - .env
+    environment:
+      - FLASK_DEBUG=1
+      - FLASK_ENV=development
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_SERVER=${POSTGRES_SERVER}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - IRIS_SECRET_KEY=${IRIS_SECRET_KEY}
+      - IRIS_SECURITY_PASSWORD_SALT=${IRIS_SECURITY_PASSWORD_SALT}
+      - IRIS_WORKER=1
+    command: celery -A app.celery worker -E -B -l DEBUG
+    depends_on:
+      - rabbitmq
+      - db
+      - app
+    networks:
+      - iris_backend
+
+  nginx:
+    extends:
+      file: docker-compose.base.yml
+      service: nginx
+    image: ${NGINX_IMAGE_NAME:-ghcr.io/dfir-iris/iriswebapp_nginx}:${NGINX_IMAGE_TAG:-v2.4.19}
+
+volumes:
+  iris-downloads:
+  user_templates:
+  server_data:
+  db_data:
+
+networks:
+  iris_backend:
+    name: iris_backend
+  iris_frontend:
+    name: iris_frontend

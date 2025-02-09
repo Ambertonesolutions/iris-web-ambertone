@@ -1,0 +1,38 @@
+FROM python:3.9
+
+ENV PYTHONUNBUFFERED=1 \
+    DOCKERIZED=1 \
+    FLASK_ENV=development \
+    FLASK_DEBUG=1
+
+# Install required packages
+RUN apt-get update && \
+    apt-get install -y p7zip-full pgp rsync postgresql-client dos2unix && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy dependencies first
+COPY source/dependencies/*.whl /app/dependencies/
+COPY source/requirements.txt /app/
+
+# Convert line endings and verify files
+RUN dos2unix /app/requirements.txt && \
+    ls -la /app/dependencies/ && \
+    echo "Contents of requirements.txt:" && \
+    cat /app/requirements.txt
+
+# Install dependencies one by one first
+RUN cd /app && \
+    for file in dependencies/*.whl; do \
+        if [ -f "$file" ]; then \
+            echo "Installing $file..." && \
+            pip3 install "$file"; \
+        fi \
+    done
+
+# Then install remaining requirements
+RUN pip3 install -r /app/requirements.txt
+
+# Development command to run with hot reload
+CMD ["gunicorn", "run:app", "--worker-class", "eventlet", "--bind", "0.0.0.0:8000", "--timeout", "180", "--reload", "--log-level=debug"]
