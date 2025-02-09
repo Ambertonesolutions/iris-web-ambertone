@@ -1,3 +1,4 @@
+# dashboard_routes.py
 #  IRIS Source Code
 #  Copyright (C) 2021 - Airbus CyberSecurity (SAS)
 #  ir@cyberactionlab.net
@@ -29,7 +30,10 @@ from flask import url_for
 from flask_login import current_user
 from flask_login import logout_user
 from flask_wtf import FlaskForm
+from flask import jsonify
 
+import traceback
+from app.ambortoneApi.ambertomApi_client import AmbertoneAPI, APIError, TokenError
 from app import app
 from app import db
 from app import oidc_client
@@ -108,34 +112,37 @@ def logout():
     return redirect(not_authenticated_redirection_url('/'))
 
 
-@dashboard_blueprint.route('/dashboard/case_charts', methods=['GET'])
-@ac_api_requires()
-def get_cases_charts():
+@dashboard_blueprint.route('/dashboard/agent-analytics', methods=['GET'])
+@ac_api_requires() 
+def get_agent_analytics():
     """
-    Get case charts
-    :return: JSON
+    Get agent analytics data for dashboard charts
+    :return: JSON with processed agents data
     """
-
-    res = Cases.query.with_entities(
-        Cases.open_date
-    ).filter(
-        Cases.open_date > (datetime.utcnow() - timedelta(days=365))
-    ).order_by(
-        Cases.open_date
-    ).all()
-    retr = [[], []]
-    rk = {}
-    for case in res:
-        month = "{}/{}/{}".format(case.open_date.day, case.open_date.month, case.open_date.year)
-
-        if month in rk:
-            rk[month] += 1
-        else:
-            rk[month] = 1
-
-        retr = [list(rk.keys()), list(rk.values())]
-
-    return response_success("", retr)
+    try:
+        log.info("Retrieving agent analytics")  # Changed from logger to log
+        api_client = AmbertoneAPI()
+        
+        try:
+            analytics_data = api_client.get_agents_analytics()
+            return response_success("Agent analytics retrieved successfully", data=analytics_data)
+            
+        except TokenError:
+            log.info("Token error, authenticating...")  # Changed from logger to log
+            api_client.authenticate()
+            analytics_data = api_client.get_agents_analytics()
+            return response_success("Agent analytics retrieved successfully", data=analytics_data)
+            
+    except APIError as e:
+        log.error(f"API Error in get_agent_analytics: {str(e)}")
+        # Clear invalid token if it exists
+        session.pop('ambertone_token', None)
+        session.pop('ambertone_token_expiry', None)
+        return response_error(f"Error retrieving agent analytics: {str(e)}")
+        
+    except Exception as e:
+        log.error(f"Unexpected error in get_agent_analytics: {str(e)}\n{traceback.format_exc()}")
+        return response_error("An unexpected error occurred while retrieving agent analytics")
 
 
 @dashboard_blueprint.route('/')

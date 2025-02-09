@@ -1,4 +1,3 @@
-
 {% extends "layouts/default.html" %}
 
 {% block title %} AMBERTONE Dashboard {% endblock title %}
@@ -7,30 +6,139 @@
 <link rel="stylesheet" href="/static/assets/css/suggestags.css">
 <link href="/static/assets/css/dataTables.contextualActions.min.css" rel="stylesheet">
 <link href="/static/assets/css/dataTables.select.min.css" rel="stylesheet">
+<style>
+    .chart-container {
+        margin: 0 -0.5rem;  /* Compensate for padding */
+    }
+    
+    .chart-container .card {
+        background: rgba(26, 26, 26, 0.8);
+        border: 1px solid #2a2a2a;
+        height: 280px;  /* Fixed height for consistency */
+        margin-bottom: 0;
+    }
+    
+    .chart-container .card.is-loading {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+    
+    .chart-container .card.is-loading:after {
+        content: "Loading...";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: #fff;
+    }
+    
+    .chart-container .card-title {
+        font-size: 0.9rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .chart-container .card-body {
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .chart-wrapper {
+        flex: 1;
+        position: relative;
+        min-height: 200px;
+    }
+    
+    .chart-refresh-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: none;
+        color: #fff;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.8rem;
+    }
+    
+    .chart-refresh-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .flex-1 {
+        flex: 1;
+    }
+    </style>
 {% endblock stylesheets %}
 
 {% block content %}
-
-    <div class="panel-header bg-primary-gradient mt--4">
-      <div class="page-inner py-5">
-        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row ">
-          <div>
-            <h2 class="text-white pb-2 fw-bold">Dashboard</h2>
-          </div>
-          <div class="ml-md-auto py-2 py-md-0">
-            <a href="javascript:void(0);" onclick="load_add_case();" class="btn btn-white btn-sm btn-border btn-round mr-2">
-              <span class="btn-label">
-                <i class="fa fa-plus"></i>
-              </span>
-              Create new case
-            </a>
+   <!-- Replace the existing chart section with this -->
+<div class="panel-header bg-primary-gradient mt--4">
+    <div class="page-inner py-5">
+      <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row mb-4">
+        <div>
+          <h2 class="text-white pb-2 fw-bold">Dashboard</h2>
+        </div>
+        <div class="ml-md-auto py-2 py-md-0">
+          <a href="javascript:void(0);" onclick="load_add_case();" class="btn btn-white btn-sm btn-border btn-round mr-2">
+            <span class="btn-label">
+              <i class="fa fa-plus"></i>
+            </span>
+            Create new case
+          </a>
+        </div>
+      </div>
+      
+      <!-- Charts Container -->
+      <div class="d-flex justify-content-between align-items-center chart-container">
+        <div class="flex-1 px-2" style="width: 33%;">
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4 class="card-title text-white m-0">Agent OS Distribution</h4>
+                <button type="button" class="chart-refresh-btn" onclick="updateAgentCharts()">
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="osChart"></canvas>
+              </div>
+            </div>
           </div>
         </div>
-          <div class="chart-container mt--2 mb--2">
-            <canvas id="htmlLegendsChart" style="display: block; width: auto; height: 100px;" width="auto" height="100px" class="chartjs-render-monitor"></canvas>
+        <div class="flex-1 px-2" style="width: 33%;">
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4 class="card-title text-white m-0">Agent Status</h4>
+                <button type="button" class="chart-refresh-btn" onclick="updateAgentCharts()">
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="statusChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="flex-1 px-2" style="width: 33%;">
+          <div class="card h-100">
+            <div class="card-body">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h4 class="card-title text-white m-0">Agent Heartbeat</h4>
+                <button type="button" class="chart-refresh-btn" onclick="updateAgentCharts()">
+                  <i class="fas fa-sync-alt"></i>
+                </button>
+              </div>
+              <div class="chart-wrapper">
+                <canvas id="heartbeatChart"></canvas>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
+  </div>
+    
     <div class="page-inner mt--5">
       <div class="row row-card-no-pd">
           <div class="col-sm-6 col-md-4">
@@ -45,7 +153,7 @@
                         <div class="col-7 col-stats">
                             <div class="numbers">
                                 <p class="card-category">Cases (open / all)</p>
-                                <h4 class="card-title">{{ data.cases_open_count }} / {{ data.cases_count }}</h4>
+                                <h4 class="card-title">{{ data.cases_open_count }} / {{ data.cases_count }}</h4>
                             </div>
                         </div>
                     </div>
@@ -91,6 +199,7 @@
             </div>
         </div>
       </div>
+      
     <div class="row" id="rowPendingCasesReview" style="display: none;">
       <div class="col-md-12">
             <section class="card">
@@ -125,6 +234,7 @@
             </section>
         </div>
     </div>
+
     <div class="row">
       <div class="col-md-12">
             {{ form.hidden_tag() }}
@@ -213,71 +323,65 @@
         </div>
     </div>
 
-      <div class="row">
-          <div class="col-md-12">
-
-				<section class="card">
-                    <div class="card-header">
-                      <div class="card-title">Global tasks
-                        <div class="text-faded float-right">
-                          <small id="tasks_last_updated"></small>
-                            <button type="button" class="btn btn-xs btn-dark ml-2"
-                              onclick="add_gtask();">
-                              Add global task
-                            </button>
-                            <button type="button" class="btn btn-xs btn-dark ml-2"
-                              onclick="update_gtasks_list();">Refresh
-                            </button>
-                        </div>
-                      </div>
+    <div class="row">
+        <div class="col-md-12">
+            <section class="card">
+                <div class="card-header">
+                  <div class="card-title">Global tasks
+                    <div class="text-faded float-right">
+                      <small id="tasks_last_updated"></small>
+                        <button type="button" class="btn btn-xs btn-dark ml-2"
+                          onclick="add_gtask();">
+                          Add global task
+                        </button>
+                        <button type="button" class="btn btn-xs btn-dark ml-2"
+                          onclick="update_gtasks_list();">Refresh
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive" id="gtasks_table_wrapper">
-                          <table class="table display table-striped table-hover" width="100%" cellspacing="0" id="gtasks_table" >
-                            <thead>
-                              <tr>
-                                  <th>Title</th>
-                                  <th>Description</th>
-                                  <th>Status</th>
-                                  <th>Assigned to</th>
-                                  <th>Last update</th>
-                                  <th>Tags</th>
-                              </tr>
-                            </thead>
-                            <tfoot>
-                              <tr>
-                                  <th>Title</th>
-                                  <th>Description</th>
-                                  <th>Status</th>
-                                  <th>Assigned to</th>
-                                  <th>Last update</th>
-                                  <th>Tags</th>
-                              </tr>
-                            </tfoot>
-                          </table>
-                        </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" id="gtasks_table_wrapper">
+                      <table class="table display table-striped table-hover" width="100%" cellspacing="0" id="gtasks_table" >
+                        <thead>
+                          <tr>
+                              <th>Title</th>
+                              <th>Description</th>
+                              <th>Status</th>
+                              <th>Assigned to</th>
+                              <th>Last update</th>
+                              <th>Tags</th>
+                          </tr>
+                        </thead>
+                        <tfoot>
+                          <tr>
+                              <th>Title</th>
+                              <th>Description</th>
+                              <th>Status</th>
+                              <th>Assigned to</th>
+                              <th>Last update</th>
+                              <th>Tags</th>
+                          </tr>
+                        </tfoot>
+                      </table>
                     </div>
-				</section>
-			</div>
+                </div>
+            </section>
         </div>
     </div>
+  </div>
 
-    <div class="modal " tabindex="-1" role="dialog" id="modal_add_gtask" data-backdrop="true">
-        <div class="modal-xl modal-dialog" role="document">
-            <div class="modal-content" id="modal_add_gtask_content">
-
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
+  <div class="modal" tabindex="-1" role="dialog" id="modal_add_gtask" data-backdrop="true">
+      <div class="modal-xl modal-dialog" role="document">
+          <div class="modal-content" id="modal_add_gtask_content">
+          </div>
+      </div>
+  </div>
 {% endblock content %}
 
 {% block javascripts %}
     <script src="/static/assets/js/plugin/tagsinput/suggesttag.js"></script>
     <script src="/static/assets/js/plugin/select/select2.js"></script>
-
     <script src="/static/assets/js/plugin/datatables/dataTables.cellEdit.js"></script>
     <script src="/static/assets/js/plugin/datatables/dataTables.buttons.min.js"></script>
     <script src="/static/assets/js/plugin/datatables/dataTables.contextualActions.min.js"></script>
@@ -285,113 +389,146 @@
     <script src="/static/assets/js/plugin/datatables/buttons.html5.min.js"></script>
     <script src="/static/assets/js/plugin/datatables/buttons.print.min.js"></script>
     <script src="/static/assets/js/iris/dashboard.js"></script>
-    <script src="/static/assets/js/core/charts.js"></script>
-   <script>
+    <script src="/static/assets/js/plugin/chart.js/chart.min.js"></script>
 
-		htmlLegendsChart = document.getElementById('htmlLegendsChart').getContext('2d');
+    
+    <script>
+    const chartColors = {
+        os: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+        status: ['#4CAF50', '#FFC107', '#F44336'],
+        heartbeat: ['#00C853', '#FFD600', '#FF6D00', '#D50000']
+    };
 
-        $.ajax({
-            url: '/dashboard/case_charts' + case_param(),
-            type: "GET",
-            dataType: "JSON",
-            success: function (data) {
-                jsdata = data;
-                if (jsdata.status == "success") {
-                    // Chart with HTML Legends
-                    var gradientStroke = htmlLegendsChart.createLinearGradient(500, 0, 100, 0);
-                    gradientStroke.addColorStop(0, '#177dff');
-                    gradientStroke.addColorStop(1, '#80b6f4');
-
-                    var gradientFill = htmlLegendsChart.createLinearGradient(500, 0, 100, 0);
-                    gradientFill.addColorStop(0, "rgba(23, 125, 255, 0.7)");
-                    gradientFill.addColorStop(1, "rgba(128, 182, 244, 0.3)");
-
-
-                    var myHtmlLegendsChart = new Chart(htmlLegendsChart, {
-                        type: 'line',
-                        data: {
-                            labels: jsdata.data[0],
-                            datasets: [  {
-                                label: "Open case",
-                                borderColor: gradientStroke,
-                                pointBackgroundColor: gradientStroke,
-                                pointRadius: 0,
-                                backgroundColor: gradientFill,
-                                legendColor: '#fff',
-                                fill: true,
-                                borderWidth: 1,
-                                data: jsdata.data[1]
-                            }]
-                        },
-                        options : {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            legend: {
-                                display: false
-                            },
-                            tooltips: {
-                                bodySpacing: 4,
-                                mode:"nearest",
-                                intersect: 0,
-                                position:"nearest",
-                                xPadding:10,
-                                yPadding:10,
-                                caretPadding:10
-                            },
-                            layout:{
-                                padding:{left:15,right:15,top:15,bottom:15}
-                            },
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        display: false
-                                    },
-                                    gridLines: {
-                                        drawTicks: false,
-                                        display: false
-                                    }
-                                }],
-                                xAxes: [{
-                                    gridLines: {
-                                        zeroLineColor: "transparent",
-                                        display: false
-                                    },
-                                    ticks: {
-                                        padding: 20,
-                                        fontColor: "rgba(0,0,0,0.5)",
-                                        fontStyle: "500",
-                                        display: false
-                                    }
-                                }]
-                            },
-                            legendCallback: function(chart) {
-                                var text = [];
-                                text.push('<ul class="' + chart.id + '-legend html-legend">');
-                                for (var i = 0; i < chart.data.datasets.length; i++) {
-                                    text.push('<li><span style="background-color:' + chart.data.datasets[i].legendColor + '"></span>');
-                                    if (chart.data.datasets[i].label) {
-                                        text.push(chart.data.datasets[i].label);
-                                    }
-                                    text.push('</li>');
-                                }
-                                text.push('</ul>');
-                                return text.join('');
-                            }
-                        }
-                    });
-
-                    //var myLegendContainer = document.getElementById("myChartLegend");
-
-                    // generate HTML legend
-                    //myLegendContainer.innerHTML = myHtmlLegendsChart.generateLegend();
-                }
+    function createDonutChart(ctx, data, labels, colors) {
+    return new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors,
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            layout: {
+                padding: 10
             },
-            error: function (error) {
-                notify_error(error);
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: '#fff',
+                        padding: 10,
+                        font: {
+                            size: 11
+                        },
+                        boxWidth: 12
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const value = context.raw;
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${context.label}: ${value} (${percentage}%)`;
+                        }
+                    }
+                }
             }
-        });
+        }
+    });
+}
+    let osChart, statusChart, heartbeatChart;
 
-
-
-   </script>
+    function updateAgentCharts() {
+    $.ajax({
+        url: '/dashboard/agent-analytics' + case_param(),
+        type: 'GET',
+        dataType: 'JSON',
+        beforeSend: function() {
+            $('.chart-container .card').addClass('is-loading');
+        },
+        success: function(response) {
+            if (response.status === "success" && response.data) {
+                const data = response.data;
+                try {
+                    // Update OS Chart
+                    if (data.os_distribution) {
+                        const osData = Object.values(data.os_distribution);
+                        const osLabels = Object.keys(data.os_distribution);
+                        if (osChart) osChart.destroy();
+                        osChart = createDonutChart(
+                            document.getElementById('osChart').getContext('2d'),
+                            osData,
+                            osLabels,
+                            chartColors.os.slice(0, osLabels.length)
+                        );
+                    }
+                    
+                    // Update Status Chart
+                    if (data.status_distribution) {
+                        const statusData = Object.values(data.status_distribution);
+                        const statusLabels = Object.keys(data.status_distribution);
+                        if (statusChart) statusChart.destroy();
+                        statusChart = createDonutChart(
+                            document.getElementById('statusChart').getContext('2d'),
+                            statusData,
+                            statusLabels,
+                            chartColors.status.slice(0, statusLabels.length)
+                        );
+                    }
+                    
+                    // Update Heartbeat Chart
+                    if (data.heartbeat_distribution) {
+                        const heartbeatData = Object.values(data.heartbeat_distribution);
+                        const heartbeatLabels = Object.keys(data.heartbeat_distribution);
+                        if (heartbeatChart) heartbeatChart.destroy();
+                        heartbeatChart = createDonutChart(
+                            document.getElementById('heartbeatChart').getContext('2d'),
+                            heartbeatData,
+                            heartbeatLabels,
+                            chartColors.heartbeat
+                        );
+                    }
+                } catch (err) {
+                    console.error('Error processing chart data:', err);
+                    notify_error('Error processing chart data: ' + err.message);
+                }
+            } else {
+                notify_error(response.message || 'Invalid response format');
+                console.error('Invalid response:', response);
+            }
+        },
+        error: function(xhr, status, error) {
+            notify_error('Failed to load agent analytics data: ' + (error || 'Unknown error'));
+            console.error('Error loading agent analytics:', {
+                status: status,
+                error: error,
+                response: xhr.responseText
+            });
+        },
+        complete: function() {
+            $('.chart-container .card').removeClass('is-loading');
+        }
+    });
+}
+    // Initial load
+    $(document).ready(function() {
+        updateAgentCharts();
+        
+        // Refresh every 5 minutes
+        setInterval(updateAgentCharts, 5 * 60 * 1000);
+        
+        // Initialize other dashboard components
+        update_ucases_list();
+        update_utasks_list();
+        update_ureviews_list();
+        update_gtasks_list();
+    });
+    </script>
 {% endblock javascripts %}

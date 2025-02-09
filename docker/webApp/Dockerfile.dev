@@ -35,4 +35,4 @@ RUN cd /app && \
 RUN pip3 install -r /app/requirements.txt
 
 # Development command to run with hot reload
-CMD ["gunicorn", "run:app", "--worker-class", "eventlet", "--bind", "0.0.0.0:8000", "--timeout", "180", "--reload", "--log-level=debug"]
+CMD ["gunicorn", "app:app", "--worker-class", "eventlet", "--bind", "0.0.0.0:8000", "--timeout", "180", "--reload", "--log-level=debug"]
