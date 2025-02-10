@@ -6,16 +6,20 @@
 <link rel="stylesheet" href="/static/assets/css/suggestags.css">
 <link href="/static/assets/css/dataTables.contextualActions.min.css" rel="stylesheet">
 <link href="/static/assets/css/dataTables.select.min.css" rel="stylesheet">
+<link href="{{ url_for('static', filename='vendor/apexcharts/apexcharts.css') }}" rel="stylesheet">
 <style>
     .chart-container {
-        margin: 0 -0.5rem;  /* Compensate for padding */
+        margin: 0 -0.5rem;
+        padding: 0 1rem;
     }
     
     .chart-container .card {
         background: rgba(26, 26, 26, 0.8);
         border: 1px solid #2a2a2a;
-        height: 280px;  /* Fixed height for consistency */
+        height: 280px;
         margin-bottom: 0;
+        width: 100%;
+        padding: 0.5rem;
     }
     
     .chart-container .card.is-loading {
@@ -32,43 +36,75 @@
         color: #fff;
     }
     
-    .chart-container .card-title {
-        font-size: 0.9rem;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+    .charts-wrapper {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.25rem;
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
     }
     
-    .chart-container .card-body {
-        padding: 1rem;
-        display: flex;
-        flex-direction: column;
+    .chart-item {
+        min-width: 0;
     }
     
-    .chart-wrapper {
-        flex: 1;
+    .chart-inner {
         position: relative;
-        min-height: 200px;
+        height: 100%;
     }
     
-    .chart-refresh-btn {
-        background: rgba(255, 255, 255, 0.1);
-        border: none;
+    .chart-title {
         color: #fff;
-        padding: 0.25rem 0.5rem;
+        font-size: 1rem;
+        margin-bottom: 1rem;
+        padding: 0.5rem;
+        background: rgba(0, 0, 0, 0.2);
         border-radius: 4px;
+    }
+    
+    .legend-box {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        padding: 0.5rem;
+        width: 140px;
+    }
+    
+    .legend-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.5rem;
         font-size: 0.8rem;
     }
     
-    .chart-refresh-btn:hover {
-        background: rgba(255, 255, 255, 0.2);
+    .legend-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        margin-right: 0.5rem;
     }
     
-    .flex-1 {
+    .legend-label {
+        color: #fff;
         flex: 1;
     }
-    </style>
+    
+    .legend-value {
+        color: #fff;
+        margin-left: 0.5rem;
+    }
+    
+    .apexcharts-legend {
+        display: none !important;
+    }
+</style>
 {% endblock stylesheets %}
+
 
 {% block content %}
    <!-- Replace the existing chart section with this -->
@@ -89,53 +125,31 @@
       </div>
       
       <!-- Charts Container -->
-      <div class="d-flex justify-content-between align-items-center chart-container">
-        <div class="flex-1 px-2" style="width: 33%;">
-          <div class="card h-100">
+      <div class="chart-container">
+        <div class="charts-wrapper">
             <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <h4 class="card-title text-white m-0">Agent OS Distribution</h4>
-                <button type="button" class="chart-refresh-btn" onclick="updateAgentCharts()">
-                  <i class="fas fa-sync-alt"></i>
-                </button>
-              </div>
-              <div class="chart-wrapper">
-                <canvas id="osChart"></canvas>
+              <h4 class="chart-title">Agent OS</h4>
+              <div class="chart-inner">
+                <div id="osChart"></div>
+                <div class="legend-box"></div>
               </div>
             </div>
+        <div class="card-body">
+          <h4 class="chart-title">Agent Status</h4>
+          <div class="chart-inner">
+              <div id="statusChart"></div>
+              <div class="legend-box"></div>
           </div>
-        </div>
-        <div class="flex-1 px-2" style="width: 33%;">
-          <div class="card h-100">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <h4 class="card-title text-white m-0">Agent Status</h4>
-                <button type="button" class="chart-refresh-btn" onclick="updateAgentCharts()">
-                  <i class="fas fa-sync-alt"></i>
-                </button>
-              </div>
-              <div class="chart-wrapper">
-                <canvas id="statusChart"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="flex-1 px-2" style="width: 33%;">
-          <div class="card h-100">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <h4 class="card-title text-white m-0">Agent Heartbeat</h4>
-                <button type="button" class="chart-refresh-btn" onclick="updateAgentCharts()">
-                  <i class="fas fa-sync-alt"></i>
-                </button>
-              </div>
-              <div class="chart-wrapper">
-                <canvas id="heartbeatChart"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
+      <div class="card-body">
+        <h4 class="chart-title">Agent HeartBeat</h4>
+        <div class="chart-inner">
+            <div id="heartbeatChart"></div>
+            <div class="legend-box"></div>
+        </div>
+    </div>
+        </div>
+    </div>
     </div>
   </div>
     
@@ -389,63 +403,139 @@
     <script src="/static/assets/js/plugin/datatables/buttons.html5.min.js"></script>
     <script src="/static/assets/js/plugin/datatables/buttons.print.min.js"></script>
     <script src="/static/assets/js/iris/dashboard.js"></script>
-    <script src="/static/assets/js/plugin/chart.js/chart.min.js"></script>
+  
+<!-- ApexCharts -->
+<script src="{{ url_for('static', filename='vendor/apexcharts/apexcharts.min.js') }}"></script>
 
+<script>
+const chartColors = {
+    os: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+    status: ['#4CAF50', '#FFC107', '#F44336'],
+    heartbeat: ['#00C853', '#FFD600', '#FF6D00', '#D50000']
+};
+
+function createDonutChart(elementId, data, colors) {
+    const chartElement = document.querySelector(elementId);
+    const legendContainer = chartElement.parentElement.querySelector('.legend-box');
     
-    <script>
-    const chartColors = {
-        os: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
-        status: ['#4CAF50', '#FFC107', '#F44336'],
-        heartbeat: ['#00C853', '#FFD600', '#FF6D00', '#D50000']
-    };
+    // Create custom legend
+    legendContainer.innerHTML = data.labels.map((label, index) => `
+        <div class="legend-item">
+            <div class="legend-color" style="background-color: ${colors[index]}"></div>
+            <div class="legend-label">${label}</div>
+            <div class="legend-value">${data.values[index]}</div>
+        </div>
+    `).join('');
 
-    function createDonutChart(ctx, data, labels, colors) {
-    return new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: data,
-                backgroundColor: colors,
-                borderWidth: 0
-            }]
+    const options = {
+        series: data.values,
+        labels: data.labels,
+        chart: {
+            type: 'donut',
+            height: 200,
+            width: '100%',
+            background: 'transparent'
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '70%',
-            layout: {
-                padding: 10
-            },
-            plugins: {
-                legend: {
-                    position: 'bottom',
+        colors: colors,
+        plotOptions: {
+            pie: {
+                donut: {
+                    size: '70%',
+                    background: 'transparent',
                     labels: {
-                        color: '#fff',
-                        padding: 10,
-                        font: {
-                            size: 11
-                        },
-                        boxWidth: 12
+                        show: false
                     }
                 },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                            const value = context.raw;
-                            const percentage = ((value / total) * 100).toFixed(1);
-                            return `${context.label}: ${value} (${percentage}%)`;
-                        }
-                    }
+                track: {
+                    background: 'transparent'
+                },
+                startAngle: -90,
+                endAngle: 270,
+                expandOnClick: false,
+                offsetX: 0,
+                offsetY: 0,
+                customScale: 1,
+                hollow: {
+                    margin: 5,
+                    size: '70%',
+                    background: 'transparent',
+                    image: undefined,
+                },
+            }
+        },
+        stroke: {
+            width: 0
+        },
+        grid: {
+            padding: {
+                top: 5,
+                bottom: 5,
+                left: 0,
+                right: 0
+            }
+        },
+        states: {
+            hover: {
+                filter: {
+                    type: 'none'
+                }
+            },
+            active: {
+                filter: {
+                    type: 'none'
                 }
             }
-        }
-    });
-}
-    let osChart, statusChart, heartbeatChart;
+        },
+        theme: {
+            palette: 'palette1'
+        },
+        chart: {
+            type: 'donut',
+            height: 200,
+            width: '100%',
+            background: 'transparent',
+            sparkline: {
+                enabled: false
+            },
+            animations: {
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
+            }
+        },
+        legend: {
+            show: false
+        },
+        dataLabels: {
+            enabled: false
+        },
+        tooltip: {
+            enabled: true,
+            theme: 'dark',
+            y: {
+                formatter: function(value) {
+                    const total = data.values.reduce((a, b) => a + b, 0);
+                    const percentage = ((value / total) * 100).toFixed(1);
+                    return `${value} (${percentage}%)`;
+                }
+            }
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    width: 200
+                }
+            }
+        }]
+    };
 
-    function updateAgentCharts() {
+    const chart = new ApexCharts(chartElement, options);
+    return chart;
+}
+
+function updateAgentCharts() {
     $.ajax({
         url: '/dashboard/agent-analytics' + case_param(),
         type: 'GET',
@@ -457,78 +547,64 @@
             if (response.status === "success" && response.data) {
                 const data = response.data;
                 try {
-                    // Update OS Chart
-                    if (data.os_distribution) {
-                        const osData = Object.values(data.os_distribution);
-                        const osLabels = Object.keys(data.os_distribution);
-                        if (osChart) osChart.destroy();
-                        osChart = createDonutChart(
-                            document.getElementById('osChart').getContext('2d'),
-                            osData,
-                            osLabels,
-                            chartColors.os.slice(0, osLabels.length)
-                        );
-                    }
-                    
-                    // Update Status Chart
-                    if (data.status_distribution) {
-                        const statusData = Object.values(data.status_distribution);
-                        const statusLabels = Object.keys(data.status_distribution);
-                        if (statusChart) statusChart.destroy();
-                        statusChart = createDonutChart(
-                            document.getElementById('statusChart').getContext('2d'),
-                            statusData,
-                            statusLabels,
-                            chartColors.status.slice(0, statusLabels.length)
-                        );
-                    }
-                    
-                    // Update Heartbeat Chart
-                    if (data.heartbeat_distribution) {
-                        const heartbeatData = Object.values(data.heartbeat_distribution);
-                        const heartbeatLabels = Object.keys(data.heartbeat_distribution);
-                        if (heartbeatChart) heartbeatChart.destroy();
-                        heartbeatChart = createDonutChart(
-                            document.getElementById('heartbeatChart').getContext('2d'),
-                            heartbeatData,
-                            heartbeatLabels,
-                            chartColors.heartbeat
-                        );
-                    }
+                    // Clear existing charts
+                    document.querySelectorAll('#osChart, #statusChart, #heartbeatChart').forEach(el => {
+                        el.innerHTML = '';
+                    });
+
+                    // OS Distribution Chart
+                    const osData = {
+                        labels: Object.keys(data.os_distribution),
+                        values: Object.values(data.os_distribution)
+                    };
+                    const osChart = createDonutChart('#osChart', osData, chartColors.os);
+                    osChart.render();
+
+                    // Status Distribution Chart
+                    const statusData = {
+                        labels: Object.keys(data.status_distribution),
+                        values: Object.values(data.status_distribution)
+                    };
+                    const statusChart = createDonutChart('#statusChart', statusData, chartColors.status);
+                    statusChart.render();
+
+                    // Heartbeat Distribution Chart
+                    const heartbeatData = {
+                        labels: Object.keys(data.heartbeat_distribution),
+                        values: Object.values(data.heartbeat_distribution)
+                    };
+                    const heartbeatChart = createDonutChart('#heartbeatChart', heartbeatData, chartColors.heartbeat);
+                    heartbeatChart.render();
+
                 } catch (err) {
                     console.error('Error processing chart data:', err);
                     notify_error('Error processing chart data: ' + err.message);
                 }
             } else {
                 notify_error(response.message || 'Invalid response format');
-                console.error('Invalid response:', response);
             }
         },
         error: function(xhr, status, error) {
             notify_error('Failed to load agent analytics data: ' + (error || 'Unknown error'));
-            console.error('Error loading agent analytics:', {
-                status: status,
-                error: error,
-                response: xhr.responseText
-            });
         },
         complete: function() {
             $('.chart-container .card').removeClass('is-loading');
         }
     });
 }
-    // Initial load
-    $(document).ready(function() {
-        updateAgentCharts();
-        
-        // Refresh every 5 minutes
-        setInterval(updateAgentCharts, 5 * 60 * 1000);
-        
-        // Initialize other dashboard components
-        update_ucases_list();
-        update_utasks_list();
-        update_ureviews_list();
-        update_gtasks_list();
-    });
-    </script>
+
+// Initial load
+$(document).ready(function() {
+    updateAgentCharts();
+    
+    // Refresh every 5 minutes
+    setInterval(updateAgentCharts, 5 * 60 * 1000);
+    
+    // Initialize other dashboard components
+    update_ucases_list();
+    update_utasks_list();
+    update_ureviews_list();
+    update_gtasks_list();
+});
+</script>
 {% endblock javascripts %}

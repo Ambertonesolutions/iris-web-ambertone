@@ -111,32 +111,27 @@ def logout():
 
     return redirect(not_authenticated_redirection_url('/'))
 
-
 @dashboard_blueprint.route('/dashboard/agent-analytics', methods=['GET'])
 @ac_api_requires() 
 def get_agent_analytics():
-    """
-    Get agent analytics data for dashboard charts
-    :return: JSON with processed agents data
-    """
     try:
-        log.info("Retrieving agent analytics")  # Changed from logger to log
+        log.info("Retrieving agent analytics")
         api_client = AmbertoneAPI()
         
         try:
             api_client.authenticate()
-            analytics_data = api_client.get_agents_analytics()
-            return response_success("Agent analytics retrieved successfully", data=analytics_data)
+            api_response = api_client.get_agents_analytics()
+            
+            # Since the API already returns processed data, we just need to return it
+            return response_success("Agent analytics retrieved successfully", data=api_response)
             
         except TokenError:
-            log.info("Token error, authenticating...")  # Changed from logger to log
+            log.info("Token error, authenticating...")
             api_client.authenticate()
-            analytics_data = api_client.get_agents_analytics()
-            return response_success("Agent analytics retrieved successfully", data=analytics_data)
+            return get_agent_analytics()  # Retry after authentication
             
     except APIError as e:
         log.error(f"API Error in get_agent_analytics: {str(e)}")
-        # Clear invalid token if it exists
         session.pop('ambertone_token', None)
         session.pop('ambertone_token_expiry', None)
         return response_error(f"Error retrieving agent analytics: {str(e)}")
@@ -144,7 +139,6 @@ def get_agent_analytics():
     except Exception as e:
         log.error(f"Unexpected error in get_agent_analytics: {str(e)}\n{traceback.format_exc()}")
         return response_error("An unexpected error occurred while retrieving agent analytics")
-
 
 @dashboard_blueprint.route('/')
 def root():
