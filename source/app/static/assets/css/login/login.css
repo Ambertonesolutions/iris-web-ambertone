@@ -19,7 +19,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(#4b3200, #1e0a00) !important; /* Darker amber gradient */
+    background-image: url(../../img/login_background.jpg);
 }
 
 /* #### RIGHT SIDE #### */
@@ -78,9 +78,9 @@
 }
 
 .login__form_input input {
-    background: none;
     border: none;
     color: #c77d00; /* Muted amber text */
+    background-color: #121212; /* Darker near black background */
 }
 
 .login__show_password {
@@ -110,4 +110,15 @@
 .login__contact_container {
     align-self: center;
     color: #c77d00; /* Muted amber text */
+}
+
+#username {
+    background-color: #121212;
+    border: 1px solid #4b3200; /* Dark amber border */
+    padding: 8px;
+    border-radius: 5px;
+}
+
+#password {
+    background-color: #121212;
 }
