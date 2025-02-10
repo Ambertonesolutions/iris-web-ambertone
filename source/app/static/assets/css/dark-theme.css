@@ -1,18 +1,18 @@
 body {
 	background: rgba(0,0,0,1);
-	background: #121622
+	background: #14121a
 }
 
 .btn-border.btn-primary {
-  background: #004eb3 !important;
-  border-color: #004eb3 !important;
+  background: #14121a !important;
+  border-color: #14121a !important;
   color: #fff !important;
 }
 
 .selectgroup.selectgroup-primary .selectgroup-input:checked + .selectgroup-button {
-  border-color: #004eb3;
+  border-color: #14121a;
   color: #ffffff;
-  background: #004eb3;
+  background: #14121a;
 }
 
 .text-link {
@@ -20,18 +20,18 @@ body {
 }
 
 .btn-success {
-  background: #004eb3 !important;
-  border-color: #004eb3 !important;
+  background: #14121a !important;
+  border-color: #14121a !important;
 }
 
 .btn-success:hover,
 .btn-success:focus {
-  background: #003981 !important;
-  border-color: #003981 !important;
+  background: #4a4950 !important;
+  border-color: #4a4950 !important;
 }
 
 .sidebar.sidebar-style-2 .nav.nav-primary > .nav-item.active > a {
-  background: #05408c !important;
+  background: #14121a !important;
 }
 
 body .main-header {
@@ -83,9 +83,9 @@ body .card,
 body .row-card-no-pd,
 body .list-group-item,
 body .timeline>li>.timeline-panel {
-    background: #202940;
+    background: #211e28;
     box-shadow: none;
-    border: #004079b0 1px solid
+    border: #14121a 1px solid
 }
 
 body .card-pricing2 {
@@ -165,7 +165,7 @@ body .card-title a:focus {
 }
 
 .bg-shadow-gradient {
-  background: #1572E8 !important;
+  background: #4a4950 !important;
   background: -webkit-linear-gradient(legacy-direction(-45deg), #141515, #484848BD) !important;
   background: linear-gradient(-45deg, #141515, #484848BD) !important;
 }
@@ -476,7 +476,7 @@ body .select2-container--default .select2-selection--single .select2-selection__
   height: 100vh;
   display: block;
   z-index: 1;
-  background: #363e53;
+  background: #14121a;
     background-position-x: 0%;
     background-position-y: 0%;
     background-size: auto;
@@ -501,7 +501,7 @@ body .select2-container--default .select2-selection--single .select2-selection__
   height: 100vh;
   display: block;
   z-index: 1;
-  background: #363e53;
+  background: #14121a;
     background-position-x: 0%;
     background-position-y: 0%;
     background-size: auto;
@@ -547,7 +547,7 @@ body .select2-container--default .select2-selection--single .select2-selection__
   margin: 7.5px 7.5px;
   padding: 10px;
   align-items: center;
-  color: #1572E8;
+  color: #4a4950;
   border: 1px solid #595959;
   background-color: #2f3348;
   border-radius: 3px;
@@ -565,7 +565,7 @@ body .select2-container--default .select2-selection--single .select2-selection__
 
 .quick-actions .quick-actions-item:hover {
   background: #30303e;
-  color: #1572E8;
+  color: #4a4950;
   box-shadow: none;
 }
 
@@ -598,15 +598,19 @@ body .form-check [type="checkbox"] + .form-check-sign {
 }
 
 body .bg-primary-gradient{
-    background: #1f283e !important;
+    background: #171920 !important;
     background: -webkit-linear-gradient(legacy-direction(-45deg), #021223, #1f283e) !important;
-    background: linear-gradient(-45deg, #021223, #1f283e) !important;
+    background: linear-gradient(-45deg, #14121a, #1f283e) !important;
 }
 
 body .modal-header,
 body .modal-footer {
       border-top: none;
       border-bottom: none;
+}
+
+.page-inner {
+    background: #14121a;
 }
 
 body .modal-header .text-right button,
