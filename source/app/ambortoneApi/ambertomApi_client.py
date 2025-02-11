@@ -127,7 +127,7 @@ class AmbertoneAPI:
             status_counts[status] = status_counts.get(status, 0) + 1
             
         # Process heartbeat distribution
-        now = datetime.now()
+        now = datetime.now().astimezone()  # Get current time as timezone-aware
         heartbeat_ranges = {
             '0-7 days': 0,
             '7-15 days': 0,
@@ -137,8 +137,21 @@ class AmbertoneAPI:
         
         for agent in agents:
             try:
-                last_keepalive = datetime.fromisoformat(agent.get('lastKeepAlive', '').replace('Z', '+00:00'))
+                last_keepalive_str = agent.get('lastKeepAlive', '')
+                
+                # Parse the timestamp and ensure it's timezone-aware
+                last_keepalive = datetime.fromisoformat(last_keepalive_str.replace('Z', '+00:00'))
+                
+                # Convert to the same timezone as 'now' for comparison
+                last_keepalive = last_keepalive.astimezone(now.tzinfo)
+                
+                # Validate the last_keepalive date is not in the future
+                if last_keepalive > now:
+                    logger.warning(f"Future keepalive date detected: {last_keepalive}")
+                    continue
+                    
                 days_diff = (now - last_keepalive).days
+                logger.debug(f"Days difference: {days_diff} for keepalive: {last_keepalive}")
                 
                 if days_diff <= 7:
                     heartbeat_ranges['0-7 days'] += 1
@@ -148,7 +161,8 @@ class AmbertoneAPI:
                     heartbeat_ranges['15-30 days'] += 1
                 else:
                     heartbeat_ranges['30+ days'] += 1
-            except (ValueError, TypeError):
+            except (ValueError, TypeError) as e:
+                logger.error(f"Error processing keepalive date: {agent.get('lastKeepAlive', '')}, Error: {str(e)}")
                 heartbeat_ranges['30+ days'] += 1
         
         return {
@@ -156,8 +170,7 @@ class AmbertoneAPI:
             'status_distribution': status_counts,
             'heartbeat_distribution': heartbeat_ranges,
             'total_agents': len(agents)
-        }
-
+        }   
     @requires_token
     def get_agents_analytics(self) -> Dict[str, Any]:
         """Get processed agents analytics data"""
