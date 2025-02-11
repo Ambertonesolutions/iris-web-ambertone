@@ -1,5 +1,30 @@
 .chart-container {
-    margin: 0 -1rem;
+    width: 100%;
+}
+
+.charts-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    padding: 1rem;
+    width: 100%;
+}
+
+.card-body-chart {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-inner {
+    position: relative;
+    flex: 1;
+    min-height: 200px;
+    width: 100%;
 }
 
 .chart-container .card {
@@ -24,20 +49,8 @@
     color: #fff;
 }
 
-.charts-wrapper {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    padding: 1rem;
-}
-
 .chart-item {
     min-width: 0;
-}
-
-.chart-inner {
-    position: relative;
-    height: 100%;
 }
 
 .chart-title {
@@ -46,13 +59,6 @@
     padding: 0.5rem;
 }
 
-.card-body-chart {
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 10px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(10px);
-}
 
 :root {
     --chartBg: #fff;

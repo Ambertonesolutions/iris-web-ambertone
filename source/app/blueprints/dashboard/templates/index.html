@@ -436,7 +436,7 @@ function updateAgentCharts() {
         type: 'GET',
         dataType: 'JSON',
         beforeSend: function() {
-            $('.chart-container .card').addClass('is-loading');
+            $('.chart-container .card-body-chart').addClass('is-loading');
         },
         success: function(response) {
             if (response.status === "success" && response.data) {
@@ -483,7 +483,7 @@ function updateAgentCharts() {
             notify_error('Failed to load agent analytics data: ' + (error || 'Unknown error'));
         },
         complete: function() {
-            $('.chart-container .card').removeClass('is-loading');
+            $('.chart-container .card-body-chart').removeClass('is-loading');
         }
     });
 }
