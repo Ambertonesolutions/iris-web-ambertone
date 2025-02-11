@@ -3,8 +3,8 @@
 }
 
 .chart-container .card {
-    background: rgba(26, 26, 26, 0.8);
-    border: 1px solid #2a2a2a;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #fff;
     height: 280px;
     margin-bottom: 0;
     width: 100%;
@@ -42,14 +42,19 @@
 }
 
 .chart-title {
-    color: #fff;
+    color: #0c0c0c;
     font-size: 1rem;
     padding: 0.5rem;
 }
 
 .card-body-chart {
     padding: 0.5rem;
-    background-color:#211e28;
+    background-color:#fff;
     margin-bottom: 1rem;
     border-radius: 10px;
+}
+
+/*colors: ['var(--chartBg)'] set this color here*/
+:root {
+    --chartBg: #fff;
 }
