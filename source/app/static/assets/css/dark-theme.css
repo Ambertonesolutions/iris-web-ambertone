@@ -419,7 +419,7 @@ body input,
 body select,
 body .select2-selection,
 body .select2-container--default {
-    background:rgb(6, 14, 40) !important;
+    background:rgb(109, 109, 109) !important;
     color: #cac7c7;
 }
 
@@ -782,7 +782,7 @@ body label,
 .sidebar.sidebar-style-2 .nav .nav-item.active>a:focus,
 .sidebar.sidebar-style-2 .nav .nav-item.active>a[data-toggle=collapse][aria-expanded=true] {
     background: rgba(185, 185, 185, 0.18) !important;
-    color: #ff0000 !important;
+    color: #1f283e !important;
 }
 
 .sidebar.sidebar-style-2 .nav .nav-item.active>a p,
@@ -1061,4 +1061,8 @@ table.dataTable.order-column.stripe tbody>tr.odd.selected>.sorting_1 {
 
 :root {
   --chartBg: #211e28;
+}
+
+.col-cards {
+  background-color: #211e28;
 }

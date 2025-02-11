@@ -4280,7 +4280,8 @@ label {
 }
 
 .card-round {
-    border-radius: 5px;
+    border-radius: 15px;
+    border: 1px solid #c6cece !important;
 }
 
 

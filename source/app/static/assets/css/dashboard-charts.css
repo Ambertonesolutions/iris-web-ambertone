@@ -26,10 +26,9 @@
 
 .charts-wrapper {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.25rem;
-    width: 100%;
-    margin: 0 auto;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
 }
 
 .chart-item {
@@ -48,13 +47,23 @@
 }
 
 .card-body-chart {
-    padding: 0.5rem;
-    background-color:#fff;
-    margin-bottom: 1rem;
+    background: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
 }
 
-/*colors: ['var(--chartBg)'] set this color here*/
 :root {
     --chartBg: #fff;
+}
+
+.col-cards {
+    background-color: #fff;
+}
+
+.card-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
 }
