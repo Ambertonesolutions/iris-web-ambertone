@@ -19,7 +19,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: radial-gradient(#4b3200, #1e0a00) !important; /* Darker amber gradient */
+    background-image: url(../../img/login_background.jpg);
 }
 
 /* #### RIGHT SIDE #### */
@@ -44,7 +44,7 @@
     font-weight: bold;
     margin-bottom: 20px;
     font-size: 24px;
-    color: #c77d00; /* Muted amber */
+    color: #fff; /* Muted amber */
 }
 
 /* #### LOGO #### */
@@ -78,9 +78,9 @@
 }
 
 .login__form_input input {
-    background: none;
     border: none;
     color: #c77d00; /* Muted amber text */
+    background-color: #fff; /* Darker near black background */
 }
 
 .login__show_password {
@@ -92,7 +92,7 @@
 .login__submit_button {
     width: 40%;
     font-weight: bold;
-    background-color: #4b3200; /* Dark amber */
+    background-color: #fff !important; /* Dark amber */
     color: #000000; /* Black contrast */
     border: none;
     padding: 10px;
@@ -109,5 +109,16 @@
 /* #### CONTACT #### */
 .login__contact_container {
     align-self: center;
-    color: #c77d00; /* Muted amber text */
+    color: #fff; /* Muted amber text */
+}
+
+#username {
+    background-color: #fff;
+    border: 1px solid #4b3200; /* Dark amber border */
+    padding: 8px;
+    border-radius: 5px;
+}
+
+#password {
+    background-color: #fff;
 }

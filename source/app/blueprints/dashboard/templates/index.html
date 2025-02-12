@@ -1,4 +1,3 @@
-
 {% extends "layouts/default.html" %}
 
 {% block title %} AMBERTONE Dashboard {% endblock title %}
@@ -7,47 +6,72 @@
 <link rel="stylesheet" href="/static/assets/css/suggestags.css">
 <link href="/static/assets/css/dataTables.contextualActions.min.css" rel="stylesheet">
 <link href="/static/assets/css/dataTables.select.min.css" rel="stylesheet">
+<link href="/static/assets/css/dashboard-charts.css" rel="stylesheet">
+<link href="{{ url_for('static', filename='vendor/apexcharts/apexcharts.css') }}" rel="stylesheet">
+
 {% endblock stylesheets %}
 
-{% block content %}
 
-    <div class="panel-header bg-primary-gradient mt--4">
-      <div class="page-inner py-5">
-        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row ">
-          <div>
-            <h2 class="text-white pb-2 fw-bold">Dashboard</h2>
-          </div>
-          <div class="ml-md-auto py-2 py-md-0">
-            <a href="javascript:void(0);" onclick="load_add_case();" class="btn btn-white btn-sm btn-border btn-round mr-2">
-              <span class="btn-label">
-                <i class="fa fa-plus"></i>
-              </span>
-              Create new case
-            </a>
-          </div>
+{% block content %}
+   <!-- Replace the existing chart section with this -->
+<div class="panel-header bg-primary-gradient mt--4">
+    <div class="page-inner py-5">
+      <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row mb-4">
+        <div>
+          <h2 class="text-white pb-2 fw-bold">Dashboard</h2>
         </div>
-          <div class="chart-container mt--2 mb--2">
-            <canvas id="htmlLegendsChart" style="display: block; width: auto; height: 100px;" width="auto" height="100px" class="chartjs-render-monitor"></canvas>
+        <div class="ml-md-auto py-2 py-md-0">
+          <a href="javascript:void(0);" onclick="load_add_case();" class="btn btn-white btn-sm btn-border btn-round mr-2">
+            <span class="btn-label">
+              <i class="fa fa-plus"></i>
+            </span>
+            Create new case
+          </a>
         </div>
       </div>
+      
+      <!-- Charts Container -->
+      <div class="chart-container">
+        <div class="charts-wrapper">
+            <div class="card-body-chart card-round">
+              <h4 class="chart-title">Agent OS</h4>
+              <div class="chart-inner">
+                <div id="osChart"></div>
+              </div>
+            </div>
+            <div class="card-body-chart card-round">
+              <h4 class="chart-title">Agent Status</h4>
+              <div class="chart-inner">
+                <div id="statusChart"></div>
+              </div>
+            </div>
+            <div class="card-body-chart card-round">
+              <h4 class="chart-title">Agent HeartBeat</h4>
+              <div class="chart-inner">
+                <div id="heartbeatChart"></div>
+              </div>
+            </div>
+        </div>
+     </div>
     </div>
+    
     <div class="page-inner mt--5">
-      <div class="row row-card-no-pd">
-          <div class="col-sm-6 col-md-4">
+      <div class="card-row">
+        <div class="col-sm-6 col-md-4">
             <div class="card card-stats card-round">
                 <div class="card-body ">
-                    <div class="row">
+                    <div class="row col-cards">
+                        <div class="col-7 col-stats">
+                            <div class="numbers">
+                                <p class="card-category">Cases (open / all)</p>
+                                <h1 class="card-title">{{ data.cases_open_count }} / {{ data.cases_count }}</h1>
+                            </div>
+                        </div>
                         <div class="col-5">
                             <div class="icon-big text-center">
                                 <i class="flaticon-file-1 text-success"></i>
                             </div>
                         </div>
-                        <div class="col-7 col-stats">
-                            <div class="numbers">
-                                <p class="card-category">Cases (open / all)</p>
-                                <h4 class="card-title">{{ data.cases_open_count }} / {{ data.cases_count }}</h4>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -55,18 +79,18 @@
         <div class="col-sm-6 col-md-4">
             <div class="card card-stats card-round">
                 <div class="card-body ">
-                    <div class="row">
+                    <div class="row col-cards">
+                        <div class="col-7 col-stats">
+                            <div class="numbers">
+                                <p class="card-category">Attributed open cases</p>
+                                <h1 class="card-title">{{ data.user_open_count }}</h1>
+                            </div>
+                        </div>
                         <div class="col-5">
                             <div class="icon-big text-center">
                                 <i class="flaticon-suitcase text-warning"></i>
                             </div>
                         </div>
-                        <div class="col-7 col-stats">
-                            <div class="numbers">
-                                <p class="card-category">Attributed open cases</p>
-                                <h4 class="card-title">{{ data.user_open_count }}</h4>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -74,16 +98,16 @@
         <div class="col-sm-6 col-md-4">
             <div class="card card-stats card-round">
                 <div class="card-body ">
-                    <div class="row">
-                        <div class="col-5">
-                            <div class="icon-big text-center">
-                                <i id='icon_user_task' class=""></i>
-                            </div>
-                        </div>
+                    <div class="row col-cards">
                         <div class="col-7 col-stats">
                             <div class="numbers">
                                 <p class="card-category">Attributed open tasks</p>
-                                <h4 class="card-title" id="user_attr_count"></h4>
+                                <h1 class="card-title" id="user_attr_count"></h1>
+                            </div>
+                        </div>
+                        <div class="col-5">
+                            <div class="icon-big text-center">
+                                <i id='icon_user_task' class=""></i>
                             </div>
                         </div>
                     </div>
@@ -91,8 +115,9 @@
             </div>
         </div>
       </div>
-    <div class="row" id="rowPendingCasesReview" style="display: none;">
-      <div class="col-md-12">
+      
+    <div class="row" id="rowPendingCasesReview" style="display: none;;">
+      <div class="col-md-12 card-round" >
             <section class="card">
                 <div class="card-header">
                   <div class="card-title">Attributed cases review
@@ -125,10 +150,11 @@
             </section>
         </div>
     </div>
+
     <div class="row">
       <div class="col-md-12">
             {{ form.hidden_tag() }}
-            <section class="card">
+            <section class="card card-round">
                 <div class="card-header">
                   <div class="card-title">Attributed open tasks
                     <div class="text-faded float-right">
@@ -171,7 +197,7 @@
 
     <div class="row">
         <div class="col-md-12">
-            <section class="card">
+            <section class="card card-round">
                 <div class="card-header">
                   <div class="card-title">Attributed open cases
                     <div class="text-faded float-right">
@@ -213,71 +239,65 @@
         </div>
     </div>
 
-      <div class="row">
-          <div class="col-md-12">
-
-				<section class="card">
-                    <div class="card-header">
-                      <div class="card-title">Global tasks
-                        <div class="text-faded float-right">
-                          <small id="tasks_last_updated"></small>
-                            <button type="button" class="btn btn-xs btn-dark ml-2"
-                              onclick="add_gtask();">
-                              Add global task
-                            </button>
-                            <button type="button" class="btn btn-xs btn-dark ml-2"
-                              onclick="update_gtasks_list();">Refresh
-                            </button>
-                        </div>
-                      </div>
+    <div class="row">
+        <div class="col-md-12">
+            <section class="card card-round">
+                <div class="card-header">
+                  <div class="card-title">Global tasks
+                    <div class="text-faded float-right">
+                      <small id="tasks_last_updated"></small>
+                        <button type="button" class="btn btn-xs btn-dark ml-2"
+                          onclick="add_gtask();">
+                          Add global task
+                        </button>
+                        <button type="button" class="btn btn-xs btn-dark ml-2"
+                          onclick="update_gtasks_list();">Refresh
+                        </button>
                     </div>
-                    <div class="card-body">
-                        <div class="table-responsive" id="gtasks_table_wrapper">
-                          <table class="table display table-striped table-hover" width="100%" cellspacing="0" id="gtasks_table" >
-                            <thead>
-                              <tr>
-                                  <th>Title</th>
-                                  <th>Description</th>
-                                  <th>Status</th>
-                                  <th>Assigned to</th>
-                                  <th>Last update</th>
-                                  <th>Tags</th>
-                              </tr>
-                            </thead>
-                            <tfoot>
-                              <tr>
-                                  <th>Title</th>
-                                  <th>Description</th>
-                                  <th>Status</th>
-                                  <th>Assigned to</th>
-                                  <th>Last update</th>
-                                  <th>Tags</th>
-                              </tr>
-                            </tfoot>
-                          </table>
-                        </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive" id="gtasks_table_wrapper">
+                      <table class="table display table-striped table-hover" width="100%" cellspacing="0" id="gtasks_table" >
+                        <thead>
+                          <tr>
+                              <th>Title</th>
+                              <th>Description</th>
+                              <th>Status</th>
+                              <th>Assigned to</th>
+                              <th>Last update</th>
+                              <th>Tags</th>
+                          </tr>
+                        </thead>
+                        <tfoot>
+                          <tr>
+                              <th>Title</th>
+                              <th>Description</th>
+                              <th>Status</th>
+                              <th>Assigned to</th>
+                              <th>Last update</th>
+                              <th>Tags</th>
+                          </tr>
+                        </tfoot>
+                      </table>
                     </div>
-				</section>
-			</div>
+                </div>
+            </section>
         </div>
     </div>
+  
 
-    <div class="modal " tabindex="-1" role="dialog" id="modal_add_gtask" data-backdrop="true">
-        <div class="modal-xl modal-dialog" role="document">
-            <div class="modal-content" id="modal_add_gtask_content">
-
-            </div>
-            <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-    </div>
-
+  <div class="modal" tabindex="-1" role="dialog" id="modal_add_gtask" data-backdrop="true">
+      <div class="modal-xl modal-dialog" role="document">
+          <div class="modal-content" id="modal_add_gtask_content">
+          </div>
+      </div>
+  </div>
 {% endblock content %}
 
 {% block javascripts %}
     <script src="/static/assets/js/plugin/tagsinput/suggesttag.js"></script>
     <script src="/static/assets/js/plugin/select/select2.js"></script>
-
     <script src="/static/assets/js/plugin/datatables/dataTables.cellEdit.js"></script>
     <script src="/static/assets/js/plugin/datatables/dataTables.buttons.min.js"></script>
     <script src="/static/assets/js/plugin/datatables/dataTables.contextualActions.min.js"></script>
@@ -285,113 +305,231 @@
     <script src="/static/assets/js/plugin/datatables/buttons.html5.min.js"></script>
     <script src="/static/assets/js/plugin/datatables/buttons.print.min.js"></script>
     <script src="/static/assets/js/iris/dashboard.js"></script>
-    <script src="/static/assets/js/core/charts.js"></script>
-   <script>
+  
+<!-- ApexCharts -->
+<script src="{{ url_for('static', filename='vendor/apexcharts/apexcharts.min.js') }}"></script>
 
-		htmlLegendsChart = document.getElementById('htmlLegendsChart').getContext('2d');
+<script>
+const chartColors = {
+    os: ['#3d136d', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+    status: ['#4CAF50', '#FFC107', '#F44336'],
+    heartbeat: ['#00C853', '#FFD600', '#FF6D00', '#D50000']
+};
 
-        $.ajax({
-            url: '/dashboard/case_charts' + case_param(),
-            type: "GET",
-            dataType: "JSON",
-            success: function (data) {
-                jsdata = data;
-                if (jsdata.status == "success") {
-                    // Chart with HTML Legends
-                    var gradientStroke = htmlLegendsChart.createLinearGradient(500, 0, 100, 0);
-                    gradientStroke.addColorStop(0, '#177dff');
-                    gradientStroke.addColorStop(1, '#80b6f4');
-
-                    var gradientFill = htmlLegendsChart.createLinearGradient(500, 0, 100, 0);
-                    gradientFill.addColorStop(0, "rgba(23, 125, 255, 0.7)");
-                    gradientFill.addColorStop(1, "rgba(128, 182, 244, 0.3)");
-
-
-                    var myHtmlLegendsChart = new Chart(htmlLegendsChart, {
-                        type: 'line',
-                        data: {
-                            labels: jsdata.data[0],
-                            datasets: [  {
-                                label: "Open case",
-                                borderColor: gradientStroke,
-                                pointBackgroundColor: gradientStroke,
-                                pointRadius: 0,
-                                backgroundColor: gradientFill,
-                                legendColor: '#fff',
-                                fill: true,
-                                borderWidth: 1,
-                                data: jsdata.data[1]
-                            }]
-                        },
-                        options : {
-                            responsive: true,
-                            maintainAspectRatio: false,
-                            legend: {
-                                display: false
-                            },
-                            tooltips: {
-                                bodySpacing: 4,
-                                mode:"nearest",
-                                intersect: 0,
-                                position:"nearest",
-                                xPadding:10,
-                                yPadding:10,
-                                caretPadding:10
-                            },
-                            layout:{
-                                padding:{left:15,right:15,top:15,bottom:15}
-                            },
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        display: false
-                                    },
-                                    gridLines: {
-                                        drawTicks: false,
-                                        display: false
-                                    }
-                                }],
-                                xAxes: [{
-                                    gridLines: {
-                                        zeroLineColor: "transparent",
-                                        display: false
-                                    },
-                                    ticks: {
-                                        padding: 20,
-                                        fontColor: "rgba(0,0,0,0.5)",
-                                        fontStyle: "500",
-                                        display: false
-                                    }
-                                }]
-                            },
-                            legendCallback: function(chart) {
-                                var text = [];
-                                text.push('<ul class="' + chart.id + '-legend html-legend">');
-                                for (var i = 0; i < chart.data.datasets.length; i++) {
-                                    text.push('<li><span style="background-color:' + chart.data.datasets[i].legendColor + '"></span>');
-                                    if (chart.data.datasets[i].label) {
-                                        text.push(chart.data.datasets[i].label);
-                                    }
-                                    text.push('</li>');
-                                }
-                                text.push('</ul>');
-                                return text.join('');
-                            }
-                        }
-                    });
-
-                    //var myLegendContainer = document.getElementById("myChartLegend");
-
-                    // generate HTML legend
-                    //myLegendContainer.innerHTML = myHtmlLegendsChart.generateLegend();
+function createDonutChart(elementId, data) {
+    const chartElement = document.querySelector(elementId);
+    const options = {
+        series: data.values,
+        labels: data.labels,
+        chart: {
+            type: 'donut',
+            height: 300, // Increased height to accommodate legend
+            width: '100%',
+            background: 'transparent'
+        },
+        // colors: palette10,
+        plotOptions: {
+            pie: {
+                donut: {
+                    size: '60%',
+                    background: 'transparent',
+                    labels: {
+                        show: false
+                    }
+                },
+                track: {
+                    background: 'transparent'
+                },
+                startAngle: -90,
+                endAngle: 270,
+                offsetX: 0,
+                offsetY: 0,
+                customScale: 1,
+                hollow: {
+                    margin: 5,
+                    size: '70%',
+                    background: 'transparent',
+                    image: undefined,
+                }
+            }
+        },
+        stroke: {
+            width: 4,
+            colors: ['var(--chartBg)']
+        },
+        grid: {
+            padding: {
+                top: 5,
+                bottom: 5,
+                left: 0,
+                right: 0
+            }
+        },
+        states: {
+            hover: {
+                filter: {
+                    type: 'none'
                 }
             },
-            error: function (error) {
-                notify_error(error);
+            active: {
+                filter: {
+                    type: 'none'
+                }
             }
-        });
+        },
+        theme: {
+            palette: 'palette10'
+        },
+        legend: {
+            show: true,
+            position: 'right',
+            fontSize: '12px',
+            fontFamily: 'inherit',
+            offsetY: 0,
+            itemMargin: {
+                horizontal: 8,
+                vertical: 5
+            },
+            labels: {
+                colors: 'var(--chartLabel)',  
+            },
+            width: 150, // Fixed width for legend
+            formatter: function(seriesName, opts) {
+                // Format the text to add line breaks if too long
+                const maxLength = 20;
+                if (seriesName.length > maxLength) {
+                    const words = seriesName.split(' ');
+                    let lines = [''];
+                    let currentLine = 0;
+                    
+                    words.forEach(word => {
+                        if ((lines[currentLine] + ' ' + word).length <= maxLength) {
+                            lines[currentLine] += (lines[currentLine].length ? ' ' : '') + word;
+                        } else {
+                            currentLine++;
+                            lines[currentLine] = word;
+                        }
+                    });
+                    
+                    return lines.join('\n');
+                }
+                return seriesName;
+            },
+            labels: {
+                useSeriesColors: false,
+                colors: 'var(--chartLabel)'
+            },
+            markers: {
+                width: 8,
+                height: 8,
+                strokeWidth: 0,
+                radius: 12,
+                offsetX: -3
+            }
+        },
+        dataLabels: {
+            enabled: false // Disabled data labels inside chart since we have legend
+        },
+        tooltip: {
+            enabled: true,
+            theme: 'dark',
+            y: {
+                formatter: function(value) {
+                    const total = data.values.reduce((a, b) => a + b, 0);
+                    const percentage = ((value / total) * 100).toFixed(1);
+                    return `${value} (${percentage}%)`;
+                }
+            }
+        },
+        responsive: [{
+            breakpoint: 480,
+            options: {
+                chart: {
+                    height: 280
+                },
+                legend: {
+                    position: 'bottom',
+                    width: undefined,
+                    offsetY: 0,
+                    offsetX: 0
+                }
+            }
+        }]
+    };
 
+    const chart = new ApexCharts(chartElement, options);
+    return chart;
+}
+function updateAgentCharts() {
+    $.ajax({
+        url: '/dashboard/agent-analytics' + case_param(),
+        type: 'GET',
+        dataType: 'JSON',
+        beforeSend: function() {
+            $('.chart-container .card-body-chart').addClass('is-loading');
+        },
+        success: function(response) {
+            if (response.status === "success" && response.data) {
+                const data = response.data;
+                try {
+                    // Clear existing charts
+                    document.querySelectorAll('#osChart, #statusChart, #heartbeatChart').forEach(el => {
+                        el.innerHTML = '';
+                    });
 
+                    // OS Distribution Chart
+                    const osData = {
+                        labels: Object.keys(data.os_distribution),
+                        values: Object.values(data.os_distribution)
+                    };
+                    const osChart = createDonutChart('#osChart', osData);
+                    osChart.render();
 
-   </script>
+                    // Status Distribution Chart
+                    const statusData = {
+                        labels: Object.keys(data.status_distribution),
+                        values: Object.values(data.status_distribution)
+                    };
+                    const statusChart = createDonutChart('#statusChart', statusData);
+                    statusChart.render();
+
+                    // Heartbeat Distribution Chart
+                    const heartbeatData = {
+                        labels: Object.keys(data.heartbeat_distribution),
+                        values: Object.values(data.heartbeat_distribution)
+                    };
+                    const heartbeatChart = createDonutChart('#heartbeatChart', heartbeatData);
+                    heartbeatChart.render();
+
+                } catch (err) {
+                    console.error('Error processing chart data:', err);
+                    notify_error('Error processing chart data: ' + err.message);
+                }
+            } else {
+                notify_error(response.message || 'Invalid response format');
+            }
+        },
+        error: function(xhr, status, error) {
+            notify_error('Failed to load agent analytics data: ' + (error || 'Unknown error'));
+        },
+        complete: function() {
+            $('.chart-container .card-body-chart').removeClass('is-loading');
+        }
+    });
+}
+
+// Initial load
+$(document).ready(function() {
+    updateAgentCharts();
+    
+    // Refresh every 5 minutes
+    setInterval(updateAgentCharts, 5 * 60 * 1000);
+    
+    // Initialize other dashboard components
+    update_ucases_list();
+    update_utasks_list();
+    update_ureviews_list();
+    update_gtasks_list();
+});
+</script>
 {% endblock javascripts %}

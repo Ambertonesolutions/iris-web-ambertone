@@ -1,0 +1,76 @@
+.chart-container {
+    width: 100%;
+}
+
+.charts-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+    padding: 1rem;
+    width: 100%;
+}
+
+.card-body-chart {
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-inner {
+    position: relative;
+    flex: 1;
+    min-height: 100px;
+    width: 100%;
+}
+
+.chart-container .card {
+    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid #fff;
+    height: 280px;
+    margin-bottom: 0;
+    width: 100%;
+}
+
+.chart-container .card.is-loading {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.chart-container .card.is-loading:after {
+    content: "Loading...";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #fff;
+}
+
+.chart-item {
+    min-width: 0;
+}
+
+.chart-title {
+    color: #0c0c0c;
+    font-size: 1rem;
+    padding: 0.5rem;
+}
+
+
+:root {
+    --chartBg: #fff;
+    --chartLabel: #0c0c0c; 
+}
+
+.col-cards {
+    background-color: #fff;
+}
+
+.card-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}

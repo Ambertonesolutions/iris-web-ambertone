@@ -1,3 +1,4 @@
+# dashboard_routes.py
 #  IRIS Source Code
 #  Copyright (C) 2021 - Airbus CyberSecurity (SAS)
 #  ir@cyberactionlab.net
@@ -29,7 +30,10 @@ from flask import url_for
 from flask_login import current_user
 from flask_login import logout_user
 from flask_wtf import FlaskForm
+from flask import jsonify
 
+import traceback
+from app.ambortoneApi.ambertomApi_client import AmbertoneAPI, APIError, TokenError
 from app import app
 from app import db
 from app import oidc_client
@@ -55,6 +59,7 @@ from app.util import not_authenticated_redirection_url
 from app.util import response_error
 from app.util import response_success
 from app.util import is_authentication_oidc
+from app.datamgmt.manage.manage_users_db import get_user_details  
 
 from oic.oauth2.exception import GrantError
 
@@ -107,36 +112,42 @@ def logout():
 
     return redirect(not_authenticated_redirection_url('/'))
 
+@dashboard_blueprint.route('/dashboard/agent-analytics', methods=['GET'])
+@ac_api_requires() 
+def get_agent_analytics():
+    try:
+        log.info("Retrieving agent analytics")
 
-@dashboard_blueprint.route('/dashboard/case_charts', methods=['GET'])
-@ac_api_requires()
-def get_cases_charts():
-    """
-    Get case charts
-    :return: JSON
-    """
+        user_details = get_user_details(current_user.id)
+        customer_name = None
+        customer_id = None
+        
+        if user_details and 'user_customers' in user_details and user_details['user_customers']:
+            customer_id = user_details['user_customers'][0].get('customer_id')
+            customer_name = user_details['user_customers'][0].get('customer_name')
 
-    res = Cases.query.with_entities(
-        Cases.open_date
-    ).filter(
-        Cases.open_date > (datetime.utcnow() - timedelta(days=365))
-    ).order_by(
-        Cases.open_date
-    ).all()
-    retr = [[], []]
-    rk = {}
-    for case in res:
-        month = "{}/{}/{}".format(case.open_date.day, case.open_date.month, case.open_date.year)
-
-        if month in rk:
-            rk[month] += 1
-        else:
-            rk[month] = 1
-
-        retr = [list(rk.keys()), list(rk.values())]
-
-    return response_success("", retr)
-
+        api_client = AmbertoneAPI()
+        try:
+            api_client.authenticate()
+            api_response = api_client.get_agents_analytics(customer_name)
+            
+            # Since the API already returns processed data, we just need to return it
+            return response_success("Agent analytics retrieved successfully", data=api_response)
+            
+        except TokenError:
+            log.info("Token error, authenticating...")
+            api_client.authenticate()
+            return get_agent_analytics()  # Retry after authentication
+            
+    except APIError as e:
+        log.error(f"API Error in get_agent_analytics: {str(e)}")
+        session.pop('ambertone_token', None)
+        session.pop('ambertone_token_expiry', None)
+        return response_error(f"Error retrieving agent analytics: {str(e)}")
+        
+    except Exception as e:
+        log.error(f"Unexpected error in get_agent_analytics: {str(e)}\n{traceback.format_exc()}")
+        return response_error("An unexpected error occurred while retrieving agent analytics")
 
 @dashboard_blueprint.route('/')
 def root():
