@@ -93,7 +93,7 @@ body .timeline>li>.timeline-panel {
 }
 
 body .card-pricing2 {
-    background: #202940 !important;
+    background: #24272d !important;
 }
 
 body .row-card-no-pd [class*=col] .card:before {
@@ -139,8 +139,8 @@ body .timeline>li>.timeline-panel:before {
 }
 
 body .timeline>li>.timeline-panel:after {
-    border-left-color: #202940;
-    border-right-color: #202940;
+    border-left-color: #24272d !important;
+    border-right-color: #24272d !important;
 }
 
 body .page-title,
@@ -224,7 +224,7 @@ body .card-pricing .specification-list li {
 
 body .input-group-text {
     border-color: #2f374b !important;
-    background-color: #1f283e;
+    background-color: #14121a !important;
     color: #fff;
 }
 
@@ -234,7 +234,7 @@ body .input-group-text {
 }
 
 .bg-grey1 {
-    background: #1f283e !important;
+    background: #14121a !important;
     color: #fff;
 }
 
@@ -259,7 +259,7 @@ body .list-group .list-group-item-text {
 
 body .footer {
     border-top: 1px solid #293247;
-    background: #1f283e;
+    background: #14121a !important
 }
 
 body .bg-focus-gradient {
@@ -269,7 +269,7 @@ body .bg-focus-gradient {
 body .form-control,
 body .form-group-default,
 body .select2-container--bootstrap .select2-selection {
-    background-color: #1a2035 !important;
+    background-color: #14121a !important;
     color: #fff !important;;
     border-color: #2f374b;
 }
@@ -283,21 +283,21 @@ body .selectgroup-button {
 }
 
 body .conversations .message-header {
-    background: #1a2035;
+    background: #14121a !important;
     box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.07);
 }
 
 body .conversations .conversations-content {
     color: #575962;
-    border-color: #2e364a;
+    border-color: #24272d !important;
 }
 
 body .mail-wrapper .mail-content .inbox-body .email-list .email-list-item.unread {
-    background: #1f283e !important;
+    background: #14121a !important;
 }
 
 body .mail-wrapper .mail-content .inbox-body .email-list .email-list-item:hover {
-    background: #171e2f !important;
+    background: #24272d !important;
 }
 
 body .page-with-aside .page-aside .aside-nav .nav>li:hover,
@@ -320,7 +320,7 @@ body .board {
 }
 
 body .modal-content {
-    background: #202940 !important;
+    background: #24272d !important;
 }
 
 body .timeline-title,
@@ -337,7 +337,7 @@ body .timeline-inverted .text-dark {
 }
 
 body .timeline-odd {
-    background: #202940 !important;
+    background: #24272d !important;
         color: #cac7c7;
 }
 body .timeline-even {
@@ -352,13 +352,13 @@ body .timeline-even {
 }
 
 .bg-close-gradient {
-  background: #1f283e !important;
+  background: #14121a !important;
   background: -webkit-linear-gradient(legacy-direction(-45deg), #010409, #51252587) !important;
   background: linear-gradient(-45deg, #010409, #51252587) !important;
 }
 
 body .amsify-suggestags-input {
-    background: #1a2035 !important;
+    background: #14121a !important;
     color: #cac7c7;
 }
 
@@ -392,15 +392,15 @@ body .dropdown-item {
 }
 
 body .dropdown-item:hover {
-     background: #1a2035 !important;
+     background: #14121a !important;
 }
 
 body .vis-network {
-     background: #202940 !important;
+     background: #24272d !important;
 }
 
 .bg-primary {
-  background-color: #1f283e !important;
+  background-color: #14121a !important;
 }
 
 body .kanban-board {
@@ -429,12 +429,12 @@ body .select2-container--default {
 
 body .btn-light:hover,
 body .btn-white:hover {
-    background: #1a2035 !important;
+    background: #14121a !important;
     color: #cac7c7;
 }
 
 .swal-modal {
-  background: #202940 !important;
+  background: #24272d !important;
 }
 
 .swal-title,
@@ -535,7 +535,7 @@ body .select2-container--default .select2-selection--single .select2-selection__
   min-height: 20px;
   padding: 19px;
   margin-bottom: 20px;
-  background-color: #202940;
+  background-color: #24272d !important;
   border: 1px solid #403f3f;
   -webkit-border-radius: 4px;
   -moz-border-radius: 4px;
@@ -681,11 +681,11 @@ body .modal-header .justify-right button {
 }
 
 .navbar-header {
-    background: #1a2035 !important;
+    background: #14121a !important;
 }
 
 .sidebar {
-    background: #1a2035 !important;
+    background: #14121a !important;
 }
 
 .sidebar .user {
@@ -719,7 +719,7 @@ body .modal-header .justify-right button {
 .sidebar.sidebar-style-2 .nav .nav-item.active>a:focus,
 .sidebar.sidebar-style-2 .nav .nav-item.active>a[data-toggle=collapse][aria-expanded=true] {
     background: #fff !important;
-    color: #1a2035 !important;
+    color: #14121a !important;
 }
 
 .sidebar.sidebar-style-2 .nav .nav-item.active>a p,
@@ -871,7 +871,7 @@ pre {
 }
 
 div.dtr-modal div.dtr-modal-display {
-    background-color: #202940 !important;
+    background-color: #24272d !important;
     color: #fff;
     border: 1px solid black;
     border-radius: 0.5em;
