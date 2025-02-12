@@ -1063,6 +1063,7 @@ table.dataTable.order-column.stripe tbody>tr.odd.selected>.sorting_1 {
 
 :root {
   --chartBg: #211e28;
+  --chartLabel: #fff;
 }
 
 .col-cards {

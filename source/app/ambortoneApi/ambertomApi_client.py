@@ -96,11 +96,11 @@ class AmbertoneAPI:
             self.authenticate()
 
     @requires_token
-    def get_agents(self) -> Dict[str, Any]:
+    def get_agents(self, customer_name) -> Dict[str, Any]:
         """Get agents data with retry logic"""
         for attempt in range(self.max_retries):
             try:
-                response = self.session.get(f"{self.base_url}/agents")
+                response = self.session.get(f"{self.base_url}/agents?group={customer_name}")
                 response.raise_for_status()
                 return response.json()
             except requests.exceptions.RequestException as e:
@@ -111,6 +111,9 @@ class AmbertoneAPI:
                 continue
 
     def process_agents_data(self, data: Dict[str, Any]) -> Dict[str, Any]:
+
+        # get current users customer name
+
         """Process raw agents data into chart-friendly format"""
         agents = data.get('data', {}).get('affected_items', [])
         
@@ -172,8 +175,8 @@ class AmbertoneAPI:
             'total_agents': len(agents)
         }   
     @requires_token
-    def get_agents_analytics(self) -> Dict[str, Any]:
+    def get_agents_analytics(self, customer_name) -> Dict[str, Any]:
         """Get processed agents analytics data"""
         logger.info("Getting agents analytics data")
-        raw_data = self.get_agents()
+        raw_data = self.get_agents(customer_name)
         return self.process_agents_data(raw_data)

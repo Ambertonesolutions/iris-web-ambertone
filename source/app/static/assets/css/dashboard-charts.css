@@ -23,7 +23,7 @@
 .chart-inner {
     position: relative;
     flex: 1;
-    min-height: 200px;
+    min-height: 100px;
     width: 100%;
 }
 
@@ -62,6 +62,7 @@
 
 :root {
     --chartBg: #fff;
+    --chartLabel: #0c0c0c; 
 }
 
 .col-cards {

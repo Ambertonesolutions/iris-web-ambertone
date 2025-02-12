@@ -59,6 +59,7 @@ from app.util import not_authenticated_redirection_url
 from app.util import response_error
 from app.util import response_success
 from app.util import is_authentication_oidc
+from app.datamgmt.manage.manage_users_db import get_user_details  
 
 from oic.oauth2.exception import GrantError
 
@@ -116,11 +117,19 @@ def logout():
 def get_agent_analytics():
     try:
         log.info("Retrieving agent analytics")
-        api_client = AmbertoneAPI()
+
+        user_details = get_user_details(current_user.id)
+        customer_name = None
+        customer_id = None
         
+        if user_details and 'user_customers' in user_details and user_details['user_customers']:
+            customer_id = user_details['user_customers'][0].get('customer_id')
+            customer_name = user_details['user_customers'][0].get('customer_name')
+
+        api_client = AmbertoneAPI()
         try:
             api_client.authenticate()
-            api_response = api_client.get_agents_analytics()
+            api_response = api_client.get_agents_analytics(customer_name)
             
             # Since the API already returns processed data, we just need to return it
             return response_success("Agent analytics retrieved successfully", data=api_response)

@@ -311,23 +311,23 @@
 
 <script>
 const chartColors = {
-    os: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
+    os: ['#3d136d', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'],
     status: ['#4CAF50', '#FFC107', '#F44336'],
     heartbeat: ['#00C853', '#FFD600', '#FF6D00', '#D50000']
 };
 
-function createDonutChart(elementId, data, colors) {
+function createDonutChart(elementId, data) {
     const chartElement = document.querySelector(elementId);
     const options = {
         series: data.values,
         labels: data.labels,
         chart: {
             type: 'donut',
-            height: 200,
+            height: 300, // Increased height to accommodate legend
             width: '100%',
             background: 'transparent'
         },
-        colors: colors,
+        // colors: palette10,
         plotOptions: {
             pie: {
                 donut: {
@@ -350,7 +350,7 @@ function createDonutChart(elementId, data, colors) {
                     size: '70%',
                     background: 'transparent',
                     image: undefined,
-                },
+                }
             }
         },
         stroke: {
@@ -378,32 +378,57 @@ function createDonutChart(elementId, data, colors) {
             }
         },
         theme: {
-            palette: 'palette2'
-        },
-        chart: {
-            type: 'donut',
-            height: 200,
-            width: '100%',
-            background: 'transparent',
-            sparkline: {
-                enabled: true
-            },
-            animations: {
-                dynamicAnimation: {
-                    enabled: true,
-                    speed: 350
-                }
-            }
+            palette: 'palette10'
         },
         legend: {
-            show: false
+            show: true,
+            position: 'right',
+            fontSize: '12px',
+            fontFamily: 'inherit',
+            offsetY: 0,
+            itemMargin: {
+                horizontal: 8,
+                vertical: 5
+            },
+            labels: {
+                colors: 'var(--chartLabel)',  
+            },
+            width: 150, // Fixed width for legend
+            formatter: function(seriesName, opts) {
+                // Format the text to add line breaks if too long
+                const maxLength = 20;
+                if (seriesName.length > maxLength) {
+                    const words = seriesName.split(' ');
+                    let lines = [''];
+                    let currentLine = 0;
+                    
+                    words.forEach(word => {
+                        if ((lines[currentLine] + ' ' + word).length <= maxLength) {
+                            lines[currentLine] += (lines[currentLine].length ? ' ' : '') + word;
+                        } else {
+                            currentLine++;
+                            lines[currentLine] = word;
+                        }
+                    });
+                    
+                    return lines.join('\n');
+                }
+                return seriesName;
+            },
+            labels: {
+                useSeriesColors: false,
+                colors: 'var(--chartLabel)'
+            },
+            markers: {
+                width: 8,
+                height: 8,
+                strokeWidth: 0,
+                radius: 12,
+                offsetX: -3
+            }
         },
         dataLabels: {
-            enabled: true,
-            // print value along with name of the data
-            // formatter: function(val, opts) {
-            //     return opts.w.globals.labels[opts.seriesIndex] + ": " + val;
-            // },
+            enabled: false // Disabled data labels inside chart since we have legend
         },
         tooltip: {
             enabled: true,
@@ -420,7 +445,13 @@ function createDonutChart(elementId, data, colors) {
             breakpoint: 480,
             options: {
                 chart: {
-                    width: 200
+                    height: 280
+                },
+                legend: {
+                    position: 'bottom',
+                    width: undefined,
+                    offsetY: 0,
+                    offsetX: 0
                 }
             }
         }]
@@ -429,7 +460,6 @@ function createDonutChart(elementId, data, colors) {
     const chart = new ApexCharts(chartElement, options);
     return chart;
 }
-
 function updateAgentCharts() {
     $.ajax({
         url: '/dashboard/agent-analytics' + case_param(),
@@ -452,7 +482,7 @@ function updateAgentCharts() {
                         labels: Object.keys(data.os_distribution),
                         values: Object.values(data.os_distribution)
                     };
-                    const osChart = createDonutChart('#osChart', osData, chartColors.os);
+                    const osChart = createDonutChart('#osChart', osData);
                     osChart.render();
 
                     // Status Distribution Chart
@@ -460,7 +490,7 @@ function updateAgentCharts() {
                         labels: Object.keys(data.status_distribution),
                         values: Object.values(data.status_distribution)
                     };
-                    const statusChart = createDonutChart('#statusChart', statusData, chartColors.status);
+                    const statusChart = createDonutChart('#statusChart', statusData);
                     statusChart.render();
 
                     // Heartbeat Distribution Chart
@@ -468,7 +498,7 @@ function updateAgentCharts() {
                         labels: Object.keys(data.heartbeat_distribution),
                         values: Object.values(data.heartbeat_distribution)
                     };
-                    const heartbeatChart = createDonutChart('#heartbeatChart', heartbeatData, chartColors.heartbeat);
+                    const heartbeatChart = createDonutChart('#heartbeatChart', heartbeatData);
                     heartbeatChart.render();
 
                 } catch (err) {
