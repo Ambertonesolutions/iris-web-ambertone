@@ -32,7 +32,7 @@ services:
     extends:
       file: docker-compose.base.yml
       service: app
-    image: ${APP_IMAGE_NAME:-ghcr.io/dfir-iris/iriswebapp_app}:${APP_IMAGE_TAG:-v2.4.19}
+    image: ${APP_IMAGE_NAME:-ghcr.io/Ambertonesolutions/iris-web-ambertone}:${APP_IMAGE_TAG:-v2.4.19}
 
   worker:
     extends:
