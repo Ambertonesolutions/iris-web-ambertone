@@ -106,8 +106,7 @@ def case_graph_get_data(caseid):
             'value': 1
         }
 
-        if current_user.in_dark_mode:
-            new_node['font'] = "12px verdana white"
+        new_node['font'] = "12px verdana white"
 
         if not any(node['id'] == idx for node in nodes):
             nodes.append(new_node)

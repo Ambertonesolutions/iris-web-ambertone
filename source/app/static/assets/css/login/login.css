@@ -70,9 +70,8 @@
 .login__form_input {
     display: flex;
     align-items: center;
-    background-color: #121212; /* Darker near black background */
-    border: 1px solid #4b3200; /* Dark amber border */
-    padding: 8px;
+    background-color: #fff; /* Darker near black background */
+    padding: 2px;
     border-radius: 5px;
     color: #c77d00; /* Muted amber text */
 }
@@ -86,6 +85,7 @@
 .login__show_password {
     cursor: pointer;
     color: #c77d00; /* Muted amber */
+    margin-right: 10px;
 }
 
 /* #### BUTTONS #### */

@@ -29,9 +29,7 @@
 
     <!-- Specific CSS goes HERE -->
     {% block stylesheets %}{% endblock stylesheets %}
-	{% if current_user.in_dark_mode %}
 		<link rel="stylesheet" href="/static/assets/css/dark-theme.css">
-	{% endif %}
 </head>
 <body>
 	<div class="wrapper {% block layout %}{% endblock layout %} {% include 'includes/sidebar_handler.html' %}">
