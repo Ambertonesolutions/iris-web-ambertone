@@ -28,9 +28,9 @@ class APIError(Exception):
 
 class AmbertoneAPI:
     def __init__(self):
-        self.base_url = ('https://api.ambertonesecurity.com:55000')
-        self.username = ('wazuh')
-        self.password = ('Qll873moq5OpZMJsuKL29ubd?M65YcJf')
+        self.base_url = os.getenv('AMBERTONE_API_BASE_URL')
+        self.username = os.getenv('AMBERTONE_API_USERNAME')
+        self.password = os.getenv('AMBERTONE_API_PASSWORD')
         self.session = requests.Session()
         self.max_retries = 3
         self.token_lifetime = timedelta(hours=1)
