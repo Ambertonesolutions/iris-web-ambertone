@@ -19,7 +19,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-image: url(../../img/login_background.jpg);
+    background-image: url(../../img/login_background.png);
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 /* #### RIGHT SIDE #### */
@@ -49,7 +51,7 @@
 
 /* #### LOGO #### */
 .login__logo {
-    max-width: 35%;
+    align-self: center;
 }
 
 .login__logo img {
@@ -90,10 +92,10 @@
 
 /* #### BUTTONS #### */
 .login__submit_button {
-    width: 40%;
+    width: 100%;
     font-weight: bold;
-    background-color: #fff !important; /* Dark amber */
-    color: #000000; /* Black contrast */
+    background-color: #000000 !important; /* Dark amber */
+    color: #fff; 
     border: none;
     padding: 10px;
     border-radius: 5px;
