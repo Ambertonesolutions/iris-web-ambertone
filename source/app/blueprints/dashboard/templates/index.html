@@ -33,19 +33,19 @@
       <!-- Charts Container -->
       <div class="chart-container">
         <div class="charts-wrapper">
-            <div class="card-body-chart card-round">
+            <div class="card-body-chart card-round" onclick="window.location.href = '/dashboard/agents-details';" style="cursor: pointer;">
               <h4 class="chart-title">Agent OS</h4>
               <div class="chart-inner">
                 <div id="osChart"></div>
               </div>
             </div>
-            <div class="card-body-chart card-round">
+            <div class="card-body-chart card-round" onclick="window.location.href = '/dashboard/agents-details';" style="cursor: pointer;">
               <h4 class="chart-title">Agent Status</h4>
               <div class="chart-inner">
                 <div id="statusChart"></div>
               </div>
             </div>
-            <div class="card-body-chart card-round">
+            <div class="card-body-chart card-round" onclick="window.location.href = '/dashboard/agents-details';" style="cursor: pointer;">
               <h4 class="chart-title">Agent HeartBeat</h4>
               <div class="chart-inner">
                 <div id="heartbeatChart"></div>
@@ -327,7 +327,6 @@ function createDonutChart(elementId, data) {
             width: '100%',
             background: 'transparent'
         },
-        // colors: palette10,
         plotOptions: {
             pie: {
                 donut: {
@@ -393,9 +392,8 @@ function createDonutChart(elementId, data) {
             labels: {
                 colors: 'var(--chartLabel)',  
             },
-            width: 150, // Fixed width for legend
+            width: 150, 
             formatter: function(seriesName, opts) {
-                // Format the text to add line breaks if too long
                 const maxLength = 20;
                 if (seriesName.length > maxLength) {
                     const words = seriesName.split(' ');

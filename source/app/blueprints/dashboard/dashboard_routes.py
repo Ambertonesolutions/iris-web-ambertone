@@ -149,6 +149,51 @@ def get_agent_analytics():
         log.error(f"Unexpected error in get_agent_analytics: {str(e)}\n{traceback.format_exc()}")
         return response_error("An unexpected error occurred while retrieving agent analytics")
 
+@dashboard_blueprint.route('/dashboard/agents-details')
+@ac_requires()
+def agents_details(caseid, url_redir):
+    """
+    Display the agents details page
+    """
+    if url_redir:
+        return redirect(url_for('index.agents_details'))
+
+    return render_template('agents_details.html')
+
+@dashboard_blueprint.route('/dashboard/agents-data')
+@ac_api_requires()
+def get_agents_data():
+    """
+    Get agents data for the DataTable
+    """
+    try:
+        user_details = get_user_details(current_user.id)
+        customer_name = None
+        
+        if user_details and 'user_customers' in user_details and user_details['user_customers']:
+            customer_name = user_details['user_customers'][0].get('customer_name')
+
+        api_client = AmbertoneAPI()
+        
+        try:
+            api_client.authenticate()
+            agents_data = api_client.get_agents(customer_name)
+            return response_success("Agents data retrieved successfully", data=agents_data)
+            
+        except TokenError:
+            api_client.authenticate()
+            return get_agents_data()
+            
+    except APIError as e:
+        log.error(f"API Error in get_agents_data: {str(e)}")
+        session.pop('ambertone_token', None)
+        session.pop('ambertone_token_expiry', None)
+        return response_error(f"Error retrieving agents data: {str(e)}")
+        
+    except Exception as e:
+        log.error(f"Unexpected error in get_agents_data: {str(e)}\n{traceback.format_exc()}")
+        return response_error("An unexpected error occurred while retrieving agents data")
+
 @dashboard_blueprint.route('/')
 def root():
     if app.config['DEMO_MODE_ENABLED'] == 'True':
