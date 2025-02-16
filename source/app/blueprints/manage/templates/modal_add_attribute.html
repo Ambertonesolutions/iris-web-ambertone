@@ -16,7 +16,7 @@
                              Attributes can be added by administrator in this UI, or they can be pushed by modules.<br/>
                              This means each {{ attribute.attribute_display_name }} object may have a different set of attributes.
                              Updating the default objects here will result in an update of every existing object, which might take a huge amount of time.
-                            <p>Typing wrong attributes here might result in UI breaks. IRIS will attempt to validate the attributes' taxonomy before committing.</p>
+                            <p>Typing wrong attributes here might result in UI breaks. AMBERTONE will attempt to validate the attributes' taxonomy before committing.</p>
                             <b>To avoid this, use the Preview button before saving. It displays a 1-to-1 UI representation of the attributes</b>
                         </div>
 
@@ -113,7 +113,7 @@
                             <div id="drop_attr_overwrite" class="collapse" aria-labelledby="drop_tax_attr" style="">
                                 <div class="card-body">
                                     <p>Changing types of fields in attributes might result in incompatibles types and existing objects being unable to be migrated.</p>
-                                    <p>When this happens, IRIS will not update the fields of these objects and let them as is to prevent any data loss.</p>
+                                    <p>When this happens, AMBERTONE will not update the fields of these objects and let them as is to prevent any data loss.</p>
                                     <p>This behavior can however be changed by using the <kbd>Complete overwrite</kbd> and <kbd>Partial overwrite</kbd> buttons.</p>
 
                                     <p><kbd>Partial overwrite</kbd> basically resets the attributes values of every {{ attribute.attribute_display_name }} objects that matches the current ones, and then applies the current attributes.
