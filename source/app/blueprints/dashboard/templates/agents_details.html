@@ -40,7 +40,9 @@
                                     <th>IP Address</th>
                                     <th>Operating System</th>
                                     <th>Version</th>
+                                    <th>Heartbeat</th>
                                     <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                         </table>
@@ -69,6 +71,7 @@ $(document).ready(function() {
                         ip: item.ip,
                         os: item.os.platform + ' ' + item.os.version,
                         version: item.version,
+                        heartbeat: item.lastKeepAlive,
                         status: item.status
                     };
                 });
@@ -80,10 +83,37 @@ $(document).ready(function() {
             { data: 'ip' },
             { data: 'os' },
             { data: 'version' },
-            { data: 'status', 
+            { data: 'heartbeat',
+                render: function(data) {
+                    let now = new Date();
+                    let lastKeepAlive = new Date(data);
+                    let diff = now - lastKeepAlive;
+                    // if diff <= 7 days print 0-7 days ago, if diff is >7 to <=15 days print 7-15 days ago, if diff is >15 to <=30 than print 15- 30 days ago, if diff is >30 days print >30 days ago
+                    if (diff <= 7 * 24 * 60 * 60 * 1000) {
+                        return '<span>0-7 days</span>';
+                    } else if (diff > 7 * 24 * 60 * 60 * 1000 && diff <= 15 * 24 * 60 * 60 * 1000) {
+                        return '<span>7-15 days</span>';
+                    } else if (diff > 15 * 24 * 60 * 60 * 1000 && diff <= 30 * 24 * 60 * 60 * 1000) {
+                        return '<span>15-30 days</span>';
+                    } else {
+                        return '<span>30 days</span>';
+                    }
+                }
+             },
+             { data: 'status', 
               render: function(data) {
                   let badgeClass = data === 'active' ? 'success' : 'danger';
                   return `<span class="badge badge-${badgeClass}">${data}</span>`;
+              }
+            },
+            { data: 'id',
+              render: function(data, type, row) {
+                  // Only show unquarantine button if status is not active
+                //   if (row.status !== 'active') {
+                      return `<button class="btn btn-primary btn-sm unquarantine-btn" data-agent-id="${data}">Unquarantine</button>`;
+                //   } else {
+                //       return '';
+                //   }
               }
             }
         ],
@@ -93,6 +123,63 @@ $(document).ready(function() {
         }
     });
 
+    // Add click event handler for unquarantine buttons
+    $('#agentsTable').on('click', '.unquarantine-btn', function() {
+        const agentId = $(this).data('agent-id');
+        const button = $(this);
+        
+        // Disable button and show loading
+        button.prop('disabled', true);
+        button.html('<i class="fa fa-spinner fa-spin"></i> Processing...');
+        
+        // Call API
+        $.ajax({
+            url: '/agents/unquarantine',
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify({ agent_id: agentId }),
+            success: function(response) {
+                // Show success message
+                $.notify({
+                    icon: 'fa fa-check',
+                    message: 'Agent successfully unquarantined'
+                }, {
+                    type: 'success',
+                    placement: {
+                        from: 'top',
+                        align: 'center'
+                    }
+                });
+                
+                // Reload the table to update status
+                table.ajax.reload();
+            },
+            error: function(xhr) {
+                // Re-enable button
+                button.prop('disabled', false);
+                button.html('Unquarantine');
+                
+                // Show error message
+                let errorMsg = 'Failed to unquarantine agent';
+                if (xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMsg = xhr.responseJSON.message;
+                }
+                
+                $.notify({
+                    icon: 'fa fa-times',
+                    message: errorMsg
+                }, {
+                    type: 'danger',
+                    placement: {
+                        from: 'top',
+                        align: 'center'
+                    }
+                });
+            }
+        });
+    });
+
+    // Auto-refresh table every 5 minutes
     setInterval(function() {
         table.ajax.reload(null, false);
     }, 5 * 60 * 1000);

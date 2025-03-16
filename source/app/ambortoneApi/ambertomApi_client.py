@@ -88,6 +88,24 @@ class AmbertoneAPI:
         except requests.exceptions.RequestException as e:
             logger.error(f"Authentication failed: {str(e)}")
             raise APIError(f"Authentication failed: {str(e)}")
+        
+    @requires_token
+    def unquarantine_agent(self, agent_id: str) -> Dict[str, Any]:
+        """Send a request to unquarantine an agent by ID"""
+        url = f"{self.base_url}/active-response"
+        payload = {
+            "command": "Unqurantine",
+            "arguments": [agent_id]
+        }
+
+        try:
+            response = self.session.put(url, json=payload)
+            response.raise_for_status()
+            logger.info(f"Successfully sent unquarantine request for agent {agent_id}")
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Failed to unquarantine agent {agent_id}: {str(e)}")
+            raise APIError(f"Failed to unquarantine agent: {str(e)}")
             
     def ensure_valid_token(self) -> None:
         """Ensure we have a valid token, refresh if needed"""
