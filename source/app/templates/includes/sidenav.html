@@ -66,6 +66,12 @@
 							<h4 class="text-section">Investigation</h4>
 						</li>
 						<li class="nav-item">
+							<a href="/dashboard/agents-details">
+								<i class="flaticon-profile"></i>
+								<span>Agents</span>
+							</a>
+						</li>
+						<li class="nav-item">
 							<a href="/case?cid={{session['current_case'].case_id}}">
 								<i class="flaticon-network"></i>
 								<span>Case</span>
@@ -99,6 +105,12 @@
 							<a href="/dim/tasks?cid={{session['current_case'].case_id}}">
 								<i class="flaticon-web-1"></i>
 								<span>DIM Tasks</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a href="https://chat.ambertone.ai/" target="_blank">
+								<i class="flaticon-chat"></i>
+								<span>AI CHAT</span>
 							</a>
 						</li>
 
@@ -190,12 +202,6 @@
 							</div>
 						</li>
 						{% endif %}
-						<li class="nav-item">
-							<a href="https://docs.dfir-iris.org" target="_blank" rel="noopener">
-								<i class="flaticon-round"></i>
-								<span>Help</span>
-							</a>
-						</li>
 					</ul>
 				</div>
 			</div>

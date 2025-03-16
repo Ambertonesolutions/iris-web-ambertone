@@ -40,6 +40,7 @@
                                     <th>IP Address</th>
                                     <th>Operating System</th>
                                     <th>Version</th>
+                                    <th>Heartbeat</th>
                                     <th>Status</th>
                                 </tr>
                             </thead>
@@ -69,6 +70,7 @@ $(document).ready(function() {
                         ip: item.ip,
                         os: item.os.platform + ' ' + item.os.version,
                         version: item.version,
+                        heartbeat: item.lastKeepAlive,
                         status: item.status
                     };
                 });
@@ -80,12 +82,29 @@ $(document).ready(function() {
             { data: 'ip' },
             { data: 'os' },
             { data: 'version' },
-            { data: 'status', 
+            { data: 'heartbeat',
+                render: function(data) {
+                    let now = new Date();
+                    let lastKeepAlive = new Date(data);
+                    let diff = now - lastKeepAlive;
+                    // if diff <= 7 days print 0-7 days ago, if diff is >7 to <=15 days print 7-15 days ago, if diff is >15 days print >15 to <=30 than print 15- 30 days ago, if diff is >30 days print >30 days ago
+                    if (diff <= 7 * 24 * 60 * 60 * 1000) {
+                        return '<span>0-7 days</span>';
+                    } else if (diff > 7 * 24 * 60 * 60 * 1000 && diff <= 15 * 24 * 60 * 60 * 1000) {
+                        return '<span>7-15 days</span>';
+                    } else if (diff > 15 * 24 * 60 * 60 * 1000 && diff <= 30 * 24 * 60 * 60 * 1000) {
+                        return '<span>15-30 days</span>';
+                    } else {
+                        return '<span>30 days</span>';
+                    }
+                }
+             },
+             { data: 'status', 
               render: function(data) {
                   let badgeClass = data === 'active' ? 'success' : 'danger';
                   return `<span class="badge badge-${badgeClass}">${data}</span>`;
               }
-            }
+            }  
         ],
         order: [[0, 'asc']],
         drawCallback: function() {
