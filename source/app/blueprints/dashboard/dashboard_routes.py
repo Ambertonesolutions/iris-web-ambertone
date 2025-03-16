@@ -193,6 +193,33 @@ def get_agents_data():
     except Exception as e:
         log.error(f"Unexpected error in get_agents_data: {str(e)}\n{traceback.format_exc()}")
         return response_error("An unexpected error occurred while retrieving agents data")
+    
+@dashboard_blueprint.route('/agents/unquarantine', methods=['PUT'])
+@ac_api_requires()
+def unquarantine_agent():
+    """
+    Unquarantine an agent
+    """
+    agent_id = request.json.get('agent_id')
+    
+    if not agent_id:
+        return response_error("Missing agent ID")
+    
+    try:
+        api_client = AmbertoneAPI()
+        api_client.authenticate()
+        api_client.unquarantine_agent(agent_id)
+        return response_success(f"Agent {agent_id} unquarantined successfully")
+        
+    except APIError as e:
+        log.error(f"API Error in unquarantine_agent: {str(e)}")
+        session.pop('ambertone_token', None)
+        session.pop('ambertone_token_expiry', None)
+        return response_error(f"Error unquarantining agent: {str(e)}")
+        
+    except Exception as e:
+        log.error(f"Unexpected error in unquarantine_agent: {str(e)}\n{traceback.format_exc()}")
+        return response_error("An unexpected error occurred while unquarantining agent")
 
 @dashboard_blueprint.route('/')
 def root():
