@@ -4,6 +4,9 @@
     display: flex;
     align-items: stretch;
     background-color: #000000; /* Pure black background */
+    background-image: url(../../img/login_background.png);
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 /* #### LOGIN WRAPPER #### */
@@ -19,9 +22,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-image: url(../../img/login_background.png);
-    background-size: cover;
-    background-repeat: no-repeat;
 }
 
 /* #### RIGHT SIDE #### */
@@ -31,7 +31,8 @@
     justify-content: center;
     align-items: stretch;
     padding: 15px;
-    background-color: #121212; /* Darker near black */
+    background-color: transparent;
+        /* Darker near black */
     color: #c77d00; /* Muted amber text */
 }
 
@@ -94,8 +95,7 @@
 .login__submit_button {
     width: 100%;
     font-weight: bold;
-    background-color: #000000 !important; /* Dark amber */
-    color: #fff; 
+    color: #fff;
     border: none;
     padding: 10px;
     border-radius: 5px;
