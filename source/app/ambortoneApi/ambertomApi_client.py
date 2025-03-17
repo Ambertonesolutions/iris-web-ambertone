@@ -94,7 +94,7 @@ class AmbertoneAPI:
         """Send a request to unquarantine an agent by ID"""
         url = f"{self.base_url}/active-response"
         payload = {
-            "command": "Unqurantine",
+            "command": "unquarantine",
             "arguments": [agent_id]
         }
 
