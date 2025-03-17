@@ -1731,47 +1731,60 @@ $(document).ready(function(){
     setInterval(function() { update_time(); }, 30000);
 
     $(function () {
-        var current = location.pathname;
-        btt = current.split('/')[1];
+      var current = location.pathname;
+      var btt = current.split("/")[1];
 
-        if (btt !== 'manage') {
-            btt = btt.split('?')[0];
-        } else {
-            csp = current.split('?')[0].split('/')
-            if (csp.length >= 3) {
-                csp = csp.splice(0, 3);
-            }
-            btt = csp.join('/');
+      if (btt !== "manage") {
+        btt = btt.split("?")[0];
+      } else {
+        var csp = current.split("?")[0].split("/");
+        if (csp.length >= 3) {
+          csp = csp.splice(0, 3);
         }
+        btt = csp.join("/");
+      }
 
-        $('#l_nav_tab .nav-item').each(function (k, al) {
-            href = $(al).children().attr('href');
-            try {
-                if (href == "#advanced-nav") {
-                    $('#advanced-nav .nav-subitem').each(function (i, el) {
-                        ktt = $(el).children().attr('href').split('?')[0];
-                        if (ktt === btt) {
-                            $(el).addClass('active');
-                            $(al).addClass('active');
-                            $(al).children().attr('aria-expanded', true);
-                            $('#advanced-nav').show();
-                            return false;
-                        }
-                    });
-                } else if (href.startsWith(btt)){
-                    $(this).addClass('active');
-                    return false;
-                }else{
-                    att = "";
-                    att = href.split('/')[1].split('?')[0];
-                }
-            } catch {att=""}
-            if (att === btt) {
-                $(al).addClass('active');
-                return false;
+      $("#l_nav_tab .nav-item").each(function (k, al) {
+        var href = $(al).children().attr("href");
+
+        try {
+          if (current === "/dashboard/agents-details") {
+            if (href === "/dashboard/agents-details") {
+              $(al).addClass("active");
+              return false;
             }
-        })
-    })
+          } else if (href === "#advanced-nav") {
+            $("#advanced-nav .nav-subitem").each(function (i, el) {
+              var ktt = $(el).children().attr("href").split("?")[0];
+              if (ktt === btt) {
+                $(el).addClass("active");
+                $(al).addClass("active");
+                $(al).children().attr("aria-expanded", true);
+                $("#advanced-nav").show();
+                return false;
+              }
+            });
+          } else if (href.startsWith(btt)) {
+            $(al).addClass("active");
+            return false;
+          } else {
+            var att = "";
+            try {
+              att = href.split("/")[1].split("?")[0];
+            } catch (e) {
+              att = "";
+            }
+            if (att === btt) {
+              $(al).addClass("active");
+              return false;
+            }
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      });
+    });
+    
 
     $('#submit_set_context').click(function () {
     var data_sent = new Object();
