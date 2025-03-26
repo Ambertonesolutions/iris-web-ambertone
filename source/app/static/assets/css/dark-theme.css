@@ -612,7 +612,11 @@ body .modal-footer {
 }
 
 .page-inner {
-    background: #09080d;
+    background-image: url(../img/bg.jpg);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      height: -webkit-fill-available;
 }
 
 body .modal-header .text-right button,
